@@ -3,7 +3,6 @@ Avaliação de experiência de cliente.
 
 
 # bytemaster-express-auth
-Atenticação e Token Refresh com 
 
 NodeJS + Express + TypeOrm + MySQL + Jest + SuperTest
 
