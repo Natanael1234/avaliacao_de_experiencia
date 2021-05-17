@@ -1,0 +1,41 @@
+{
+    "name": "avaliacao-de-experiencia",
+    "version": "0.0.1",
+    "description": "Avaliação de Experiência de Usuário",
+    "main": "index.js",
+    "devDependencies": {
+        "@types/bcrypt": "^3.0.0",
+        "@types/express": "^4.17.11",
+        "@types/jest": "^26.0.23",
+        "@types/jsonwebtoken": "^8.5.0",
+        "@types/moment": "^2.13.0",
+        "@types/node": "^14.14.41",
+        "@types/supertest": "^2.0.11",
+        "@types/uuid": "^8.3.0",
+        "jest": "^26.6.3",
+        "nodemon": "^2.0.7",
+        "supertest": "^6.1.3",
+        "ts-jest": "^26.5.6",
+        "ts-node": "^9.1.1",
+        "typescript": "^4.2.4"
+    },
+    "dependencies": {
+        "@types/iconv-lite": "^0.0.1",
+        "bcrypt": "^5.0.1",
+        "class-validator": "^0.13.1",
+        "express": "^4.17.1",
+        "iconv-lite": "^0.4.24",
+        "jsonwebtoken": "^8.5.1",
+        "moment": "^2.29.1",
+        "mysql2": "^2.2.5",
+        "reflect-metadata": "^0.1.10",
+        "typeorm": "0.2.31",
+        "uuid": "^8.3.2"
+    },
+    "scripts": {
+        "dev": "nodemon --config nodemon.json src/index.ts",
+        "dev:debugOLD": "nodemon --config nodemon.json --inspect-brk src/index.ts",
+        "dev:debug": "nodemon --config nodemon.json --inspect src/index.ts",
+        "test": "jest --watch"
+    }
+}
