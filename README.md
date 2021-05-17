@@ -1,32 +1,28 @@
-# avaliacao_de_experiencia
-Avaliação de experiência de cliente.
+# Avaliação de experiência de cliente.
 
-
-# bytemaster-express-auth
 
 NodeJS + Express + TypeOrm + MySQL + Jest + SuperTest
 
-# Comandos
+## Comandos
 
-## ```npm i```
+### ```npm i```
 
 Instala as dependências.
 
-## ```npm run start```
+### ```npm run start```
 
 Inicia o servidor de desenvolvimento local.
 
 
 
-# Debugging with live reload
+### Debugging with live reload
 
 1 - Run:
 
-```npm run dev:debug``` 
+### ```npm run dev:debug``` 
 
 2 - Start debugging in VSCode.
 
-
-# Teste
+### Teste
 
 ```npm run test```
