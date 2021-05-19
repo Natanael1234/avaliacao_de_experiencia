@@ -17,7 +17,7 @@ const getServer = async () => {
 const closeServer = async (server: Server) => {
     await Database.connection.close();
     (await server).close();
-    console.log('Server closed!')
+    console.log('Server closed!');
 }
 
 export { getServer, closeServer };

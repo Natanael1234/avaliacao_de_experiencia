@@ -21,7 +21,7 @@ const config: Config.InitialOptions = {
     testMatch: [
         "**/__tests__/*.(spec|test).+(ts|tsx|js)"
     ],
-    coveragePathIgnorePatterns: [
+    "coveragePathIgnorePatterns": [
         "/node_modules/"
     ]
 };

@@ -36,6 +36,6 @@
         "dev": "nodemon --config nodemon.json src/index.ts",
         "dev:debugOLD": "nodemon --config nodemon.json --inspect-brk src/index.ts",
         "dev:debug": "nodemon --config nodemon.json --inspect src/index.ts",
-        "test": "jest --watch"
+        "test": "jest"
     }
 }

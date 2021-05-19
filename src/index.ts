@@ -1,4 +1,3 @@
-import "reflect-metadata";
-import { getServer } from "./app";
+import { getServer, closeServer } from '../src/app';
 
-const server = getServer();
+getServer();
