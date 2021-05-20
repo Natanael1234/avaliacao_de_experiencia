@@ -4,6 +4,7 @@ import { Database } from "./database";
 import { clienteRouter } from "./routes/cliente.route";
 import { Server } from "http";
 import { transacaoExperienciaRouter } from "./routes/transacao-experiencia.route";
+import { avaliacaoExperienciaRouter } from "./routes/avaliacao-experiencia.route";
 
 const getServer = async () => {
     const app = express();
@@ -11,6 +12,7 @@ const getServer = async () => {
     await Database.initialize();
     app.use(clienteRouter);
     app.use(transacaoExperienciaRouter);
+    app.use(avaliacaoExperienciaRouter);
     let server = await app.listen(5000);
     console.log('Listening at PORT ', 5000);
     return server;

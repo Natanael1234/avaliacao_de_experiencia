@@ -14,6 +14,9 @@ describe('API Avaliação de Experiência de Cliente', () => {
     let clientes: any[] = [];
     let dadosTransacoesExperiencias: any[] = [];
     let transacoesExperiencias: any[] = [];
+    let dadosAvaliacoesExperiencias: any = [];
+    let avaliacoesExperiencias: any = [];
+
 
     beforeAll(async () => {
         jest.useFakeTimers();
@@ -86,11 +89,11 @@ describe('API Avaliação de Experiência de Cliente', () => {
             expect(clientes.length).toBe(pageConcat.length);
             for (let i = 0; i < pageConcat.length; i++) {
                 expect(pageConcat[i].id).toBe(clientes[i].id);
-                expect(clientes[i].nome).toBe(pageConcat[i].nome);
-                expect(clientes[i].email).toBe(pageConcat[i].email);
-                expect(clientes[i].telefone).toBe(pageConcat[i].telefone);
-                expect(clientes[i].cpf).toBe(pageConcat[i].cpf);
-                expect(clientes[i].ativo).toBe(pageConcat[i].ativo);
+                expect(pageConcat[i].nome).toBe(clientes[i].nome);
+                expect(pageConcat[i].email).toBe(clientes[i].email);
+                expect(pageConcat[i].telefone).toBe(clientes[i].telefone);
+                expect(pageConcat[i].cpf).toBe(clientes[i].cpf);
+                expect(pageConcat[i].ativo).toBe(clientes[i].ativo);
             }
         });
 
@@ -218,16 +221,79 @@ describe('API Avaliação de Experiência de Cliente', () => {
             expect(date.toISOString() < res.body.updateDate).toBeTruthy();
 
             let query = await TransacaoExperiencia.find({ where: { updateDate: MoreThan(date) } });
-            
+
             expect(query.length).toBe(1);
             expect(query[0].id).toBe(transacoesExperiencias[3].id);
-            expect(query[0].valor).toBe(transacoesExperiencias[3].valor);            
+            expect(query[0].valor).toBe(transacoesExperiencias[3].valor);
             expect(query[0].data.toISOString()).toBe(transacoesExperiencias[3].data);
-            expect(query[0].clienteId).toBe(transacoesExperiencias[3].clienteId);   
+            expect(query[0].clienteId).toBe(transacoesExperiencias[3].clienteId);
 
             transacoesExperiencias[3] = res.body;
         });
 
+    });
+
+    describe('Avaliação de Experiência', () => {
+        beforeAll(() => {
+            for (let i = 0; i < transacoesExperiencias.length; i++) {
+                dadosAvaliacoesExperiencias.push({
+                    nota: Math.floor(Math.random() * 10) + 1,
+                    descricao: 'Avaliação da experiência ' + transacoesExperiencias[i].id,
+                    transacaoExperienciaId: transacoesExperiencias[i].id
+                });
+            }
+        });
+
+        it('Post /avaliacao-experiencia', async () => {
+            for (let i = 0; i < dadosAvaliacoesExperiencias.length; i++) {
+                let date = new Date();
+                let res = await request(await server).post('/avaliacao-experiencia').send(dadosAvaliacoesExperiencias[i]);
+                expect(res.status).toBe(200);
+                expect(res.body.id).toBeDefined();
+                expect(res.body.nota).toBe(dadosAvaliacoesExperiencias[i].nota);
+                expect(res.body.descricao).toBe(dadosAvaliacoesExperiencias[i].descricao);
+                expect(date.toISOString() < res.body.creationDate).toBeTruthy();
+                avaliacoesExperiencias.push(res.body);
+            }
+        });
+
+        it('Get /avaliacoes-experiencias', async () => {
+            
+            async function queryPage(options: {
+                page: number,
+                pageSize: number,
+                expectedPageSize: number,
+                expectedOffset: number,
+                expectedTotal: number
+            }) {
+                let res = await request(await server)
+                    .get('/avaliacoes-experiencias')
+                    .query({
+                        page: options?.page,
+                        pageSize: options?.pageSize,
+                        ativo: undefined
+                    });
+                expect(res.status).toBe(200);
+                expect(res.body.page).toBe(options.page);
+                expect(res.body.pageSize).toBe(options.pageSize);
+                expect(res.body.offset).toBe(options.expectedOffset);
+                expect(res.body.total).toBe(options.expectedTotal);
+                expect(res.body.list.constructor.name).toBe('Array');
+                expect(res.body.list.length).toBe(options.expectedPageSize);
+                return res.body.list;
+            }
+
+            let page1 = await queryPage({ page: 1, pageSize: 6, expectedPageSize: 6, expectedOffset: 0, expectedTotal: 100 });
+            let page2 = await queryPage({ page: 2, pageSize: 6, expectedPageSize: 6, expectedOffset: 6, expectedTotal: 100 });
+            let pageConcat = page1.concat(page2);
+            expect(clientes.length).toBe(10);
+            for (let i = 0; i < pageConcat.length; i++) {
+                expect(pageConcat[i].id).toBe(avaliacoesExperiencias[i].id);
+                expect(pageConcat[i].nota).toBe(avaliacoesExperiencias[i].nota);
+                expect(pageConcat[i].descricao).toBe(avaliacoesExperiencias[i].descricao);
+                expect(pageConcat[i].transacaoExperienciaId).toBe(avaliacoesExperiencias[i].transacaoExperienciaId);
+            }
+        });
     });
 
     afterAll(async () => {

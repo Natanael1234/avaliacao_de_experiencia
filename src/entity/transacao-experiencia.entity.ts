@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, ManyToOne, OneToOne } from "typeorm";
 import { HttpError } from "../errors/http-error";
+import { AvaliacaoExperiencia } from "./avaliacao-experiencia";
 import { Cliente } from "./cliente.entity";
 
 @Entity()
@@ -20,11 +21,14 @@ export class TransacaoExperiencia extends BaseEntity {
     @UpdateDateColumn({ type: "timestamp" })
     updateDate: Date;
 
-    @ManyToOne(() => Cliente, cliente => cliente.transacoesExperiencias)
+    @ManyToOne(() => Cliente, cliente => cliente.transacaoExperiencia)
     cliente: Cliente;
 
     @Column({ type: 'int', nullable: true })
     clienteId?: number | null
+
+    @OneToOne(() => AvaliacaoExperiencia, avaliacaoExperiencia => avaliacaoExperiencia.transacaoExperiencia) 
+    avaliacaoExperiencia: AvaliacaoExperiencia;
 
     static async getCliente(clienteId: any) {
         if (!clienteId) throw new HttpError('Cliente indefinido', 400);

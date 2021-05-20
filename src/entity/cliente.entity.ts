@@ -31,16 +31,16 @@ export class Cliente extends BaseEntity {
     ativo: boolean;
 
     @OneToMany(() => TransacaoExperiencia, transacaoExperiencia => transacaoExperiencia.cliente)
-    transacoesExperiencias: TransacaoExperiencia[];
+    transacaoExperiencia: TransacaoExperiencia[];
 
     static async build(data: any): Promise<Cliente> {
-        let user = new Cliente();
-        user.nome = data.nome;
-        user.email = data.email;
-        user.cpf = data.cpf;
-        user.telefone = data.telefone;
-        if (data.ativo != undefined && data.ativo != null) user.ativo = !!data.ativo;
-        return user;
+        let cliente = new Cliente();
+        cliente.nome = data.nome;
+        cliente.email = data.email;
+        cliente.cpf = data.cpf;
+        cliente.telefone = data.telefone;
+        if (data.ativo != undefined && data.ativo != null) cliente.ativo = !!data.ativo;
+        return cliente;
     }
 
 
