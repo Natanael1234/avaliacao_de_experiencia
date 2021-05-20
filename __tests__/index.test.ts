@@ -124,7 +124,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
             clientes[3] = res.body;
         });
 
-        it('Delete /cliente', async () => {
+        it('Delete /cliente/:clienteId', async () => {
             let date = new Date();
             let res = await request(await server).delete('/cliente/' + clientes[3].id);
             expect(res.status).toBe(200);
