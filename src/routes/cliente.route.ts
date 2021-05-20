@@ -13,6 +13,7 @@ clienteRouter.post('/cliente', async (req: Request, res: Response) => {
         await cliente.save();
         return res.send(cliente)
     } catch (error) {
+        console.error(error.message);
         return res.status(error['status'] || 500).send(error.message);
     }
 });
@@ -31,6 +32,7 @@ clienteRouter.put('/cliente', async (req: Request, res: Response) => {
         await cliente.save({ reload: true });
         return res.send(cliente)
     } catch (error) {
+        console.error(error.message);
         return res.status(error['status'] || 500).send(error.message);
     }
 });
@@ -52,6 +54,7 @@ clienteRouter.get('/clientes', async (req: Request, res: Response) => {
         resultSet.total = <number>clientes[1];
         return res.send(resultSet);
     } catch (error) {
+        console.error(error.message);
         return res.status(error['status'] || 500).send(error.message);
     }
 });
@@ -67,6 +70,7 @@ clienteRouter.delete('/cliente/:clienteId', async (req: Request, res: Response) 
         await cliente.save({ reload: true });
         return res.send(cliente);
     } catch (error) {
+        console.error(error.message);
         return res.status(error['status'] || 500).send(error.message);
     }
 })

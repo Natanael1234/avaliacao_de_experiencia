@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, OneToMany } from "typeorm";
 import { IsEmail } from "class-validator";
+import { TransacaoExperiencia } from "./transacao-experiencia.entity";
 
 @Entity()
 export class Cliente extends BaseEntity {
@@ -28,6 +29,9 @@ export class Cliente extends BaseEntity {
 
     @Column({ type: 'boolean', nullable: false, default: true })
     ativo: boolean;
+
+    @OneToMany(() => TransacaoExperiencia, transacaoExperiencia => transacaoExperiencia.cliente)
+    transacoesExperiencias: TransacaoExperiencia[];
 
     static async build(data: any): Promise<Cliente> {
         let user = new Cliente();
