@@ -166,7 +166,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
             }
         });
 
-        it('Get cliente/:clienteId/transacao-experiencia', async () => {
+        it('Get /cliente/:clienteId/transacao-experiencia', async () => {
 
             let clienteId = clientes[2].id;
 
