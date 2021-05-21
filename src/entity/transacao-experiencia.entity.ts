@@ -32,7 +32,7 @@ export class TransacaoExperiencia extends BaseEntity {
 
     static async getCliente(clienteId: any) {
         if (!clienteId) throw new HttpError('Cliente indefinido', 400);
-        let cliente = await Cliente.findOne({ where: { id: clienteId } });
+        let cliente = await Cliente.findOne({ where: { id: clienteId } });        
         if (!cliente) throw new HttpError('Cliente não inexistente', 404);
         return cliente;
     }
