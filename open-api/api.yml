@@ -1,0 +1,558 @@
+openapi: "3.0.2"
+info:
+  title: Avaliação de Experiência
+  version: "1.0"
+servers:
+  - url: https://api.server.test/v1
+paths:
+  /cliente:
+    post:
+      description: Cria um cliente.
+      requestBody:
+        $ref: "#/components/requestBodies/PostCliente"
+      responses:
+        "200":
+          $ref: "#/components/responses/Cliente"
+        "400":
+          description: Cliente não deve ser especificado.
+        "404":
+          description: Cliente não encontrado.
+        "500":
+          description: Erro indefinido.
+    put:
+      description: Atualiza um cliente.
+      requestBody:
+        $ref: "#/components/requestBodies/PutCliente"
+      responses:
+        "200":
+          $ref: "#/components/responses/Cliente"
+        "500":
+          description: Erro indefinido.
+  /clientes:
+    get:
+      description: Lista clientes com paginação.
+      parameters:
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/pageSizeParam"
+        - $ref: "#/components/parameters/orderByParam"
+        - $ref: "#/components/parameters/orderDirectionParam"
+        - $ref: "#/components/parameters/ativoParam"
+        - $ref: "#/components/parameters/clienteList"
+      responses:
+        "200":
+          $ref: "#/components/responses/Clientes"
+        "400":
+          description: Parâmetro inválido.
+        "500":
+          description: Erro indefinido.
+  /cliente/{clienteId}:
+    delete:
+      description: Deleção lógica de um Cliente.
+      parameters:
+        - $ref: "#/components/parameters/clientIdParam"
+      responses:
+        "200":
+          $ref: '#/components/responses/Cliente'
+        "400":
+          description: Cliente indefinido.
+        "404":
+          description: Cliente não encontrado.
+        "500":
+          description: Erro indefinido.
+
+  /transacao-experiencia:
+    post:
+      description: Cria uma Transação/Experiência.
+      requestBody:
+        $ref: "#/components/requestBodies/PostTransacaoExperiencia"
+      responses:
+        "200":
+          $ref: "#/components/responses/TransacaoExperiencia"
+        "400":
+          description: Transação/Experiência não deve ser especificada ou Cliente indefinido.
+        "404":
+          description: Cliente não inexistente.
+        "500":
+          description: Erro indefinido.
+    put:
+      description: Atualiza uma Transação/Experiência.
+      requestBody:
+        $ref: "#/components/requestBodies/PutTransacaoExperiencia"
+      responses:
+        "200":
+          $ref: "#/components/responses/TransacaoExperiencia"
+        "400":
+          description: Transação/Experiência não especificada.
+        "404":
+          description: Transação/Experiência não encontrada.
+        "500":
+          description: Erro indefinido.
+  /cliente/{clienteId}/transacao-experiencia:
+    get:
+      description: Lista as Transações/Experiências de um Cliente com paginação.
+      parameters:
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/pageSizeParam"
+        - $ref: "#/components/parameters/orderByParam"
+        - $ref: "#/components/parameters/orderDirectionParam"
+        - $ref: "#/components/parameters/clientIdParam"
+        - $ref: "#/components/parameters/transacoesExperienciasList"
+      responses:
+        "200":
+          $ref: "#/components/responses/TransacoesExperiencias"
+        "400":
+          description: Transação/Experiência não especificada.
+        "404":
+          description: Transação/Experiência não encontrada.
+        "500":
+          description: Erro indefinido.
+
+  /avaliacao-experiencia:
+    post:
+      description: Cria uma Avaliação de Experiência.
+      requestBody:
+        $ref: "#/components/requestBodies/PostAvaliacaoExperiencia"
+      responses:
+        "200":
+          $ref: "#/components/responses/AvaliacaoExperiencia"
+        "400":
+          description: A avaliação de experiência não deve ser especificada.
+        "404":
+          description: Transação/Experiência não encontrada.
+        "409":
+          description: Avaliação de experiência já cadastrada.
+        "500":
+          description: Erro indefinido.
+    get:
+      description: Lista as Avaliações de Experiências com paginação.
+      parameters:
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/pageSizeParam"
+        - $ref: "#/components/parameters/orderByParam"
+        - $ref: "#/components/parameters/orderDirectionParam"
+        - $ref: "#/components/parameters/clientIdParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/AvaliacoesExperiencias"
+        "500":
+          description: Erro indefinido.
+
+components:
+  requestBodies:
+    PostCliente:
+      description: JSON contendo um novo cliente.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              nome:
+                type: string
+                nullable: false
+              email:
+                type: string
+                nullable: false
+              telefone:
+                type: string
+                nullable: false
+              cpf:
+                type: string
+                nullable: false
+              ativo:
+                type: boolean
+                default: true
+            example:
+              nome: João da Silva
+              email: cliente@email.com
+              telefone: 21986973989
+              cpf: 05977788096
+              ativo: true
+    PutCliente:
+      description: JSON contendo dados a serem salvos em um cliente.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                nullable: false
+              nome:
+                type: string
+                nullable: false
+              email:
+                type: string
+                nullable: false
+              telefone:
+                type: string
+                nullable: false
+              cpf:
+                type: string
+                nullable: false
+              ativo:
+                type: boolean
+                default: true
+            example:
+              id: 1
+              nome: João da Silva Jr
+              email: cliente2@email.com
+              telefone: 91987650174
+              cpf: 23837266648
+              ativo: false
+    PostTransacaoExperiencia:
+      description: JSON contendo dados da Transação\Experiência a ser criada.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              valor:
+                type: number
+                nullable: false
+              data:
+                type: string
+                nullable: false
+              clienteId:
+                type: integer
+                nullable: false
+            example:
+              valor: 53.3
+              data: "2021-06-20T03:00:00.000Z"
+              clienteId: 2
+    PutTransacaoExperiencia:
+      description: JSON contendo dados da Transação\Experiência a ser atualizada.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                nullable: false
+              valor:
+                type: number
+                nullable: false
+              data:
+                type: string
+                nullable: false
+              clienteId:
+                type: integer
+                nullable: false
+            example:
+              id: 2
+              valor: 53.3
+              data: "2021-05-21T03:00:00.000Z"
+              clienteId: 3
+    PostAvaliacaoExperiencia:
+      description: JSON contendo dados da Avaiação de Experiência
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              nota:
+                type: number
+                nullable: false
+              comentario:
+                type: string
+                nullable: false
+              transacaoExperienciaId:
+                type: integer
+                nullable: false
+            example:
+              nota: 7
+              comentario: Descrição
+              transacaoExperienciaId: 2
+
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: número da página para paginação.
+    pageSizeParam:
+      name: pageSize
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+      description: tamanho da página para paginação.
+    orderByParam:
+      name: ordeBy
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [id, nome, email, telefone, cpf, creationDate, updateDate, ativo]
+      description: coluna de ordenação.
+    orderDirectionParam:
+      name: orderDirectionParam
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: ["ASC, DESC"]
+      description: direção de ordenação.
+    ativoParam:
+      name: ativo
+      in: query
+      required: false
+      schema:
+        type: boolean
+      description: filtrar clientes ativos.
+    avaliacoesExperienciasList:
+      name: list
+      in: query
+      required: true
+      schema:
+        type: array
+        items:
+          $ref: "#/components/schemas/AvaliacaoExperiencia"
+      description: Lista de Avaliações de Experiências.
+    transacoesExperienciasList:
+      name: list
+      in: query
+      required: true
+      schema:
+        type: array
+        items:
+          $ref: "#/components/schemas/TransacaoExperiencia"
+      description: Lista de Transações/Experiências.
+    clienteList:
+      name: list
+      in: query
+      required: true
+      schema:
+        type: array
+        items:
+          $ref: "#/components/schemas/Cliente"
+      description: Lista de clientes.
+    clientIdParam:
+      name: clienteId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: id do cliente.
+
+  responses:
+    Cliente:
+      description: Cliente salvo.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Cliente"
+    Clientes:
+      description: Lista de Clientes com paginação.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              list:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cliente"
+              order:
+                type: object
+                nullable: true
+                example:
+                  nome: "ASC"
+              offset:
+                type: integer
+                minimum: 0
+                example: 10
+                description: número de itens antes do primeiro item da página.
+              page:
+                type: integer
+                example: 2
+                minimum: 1
+                description: número da página de dados.
+              pageSize:
+                type: integer
+                example: 10
+                minimum: 1
+                maximum: 100
+                description: tamanho da página de dados.
+              total:
+                type: integer
+                minimum: 0
+                example: 120
+                description: total de itens em todas as páginas.
+
+    TransacaoExperiencia:
+      description: Transação/Experiência salva.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TransacaoExperiencia"
+    
+    TransacoesExperiencias:
+      description: Lista de Transações/Experiências com paginação.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              list:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TransacaoExperiencia"
+              order:
+                type: object
+                nullable: true
+                example:
+                  nome: "ASC"
+              offset:
+                type: integer
+                minimum: 0
+                example: 10
+                description: número de itens antes do primeiro item da página.
+              page:
+                type: integer
+                example: 2
+                minimum: 1
+                description: número da página de dados.
+              pageSize:
+                type: integer
+                example: 10
+                minimum: 1
+                maximum: 100
+                description: tamanho da página de dados.
+              total:
+                type: integer
+                minimum: 0
+                example: 120
+                description: total de itens em todas as páginas.
+
+    AvaliacaoExperiencia:
+      description: Avaliação de Experiência salva.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AvaliacaoExperiencia"
+    AvaliacoesExperiencias:
+      description: Lista de Avaliações de Experiências com paginação.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              list:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AvaliacaoExperiencia"
+              order:
+                type: object
+                nullable: true
+                example:
+                  nome: "ASC"
+              offset:
+                type: integer
+                minimum: 0
+                example: 10
+                description: número de itens antes do primeiro item da página.
+              page:
+                type: integer
+                example: 2
+                minimum: 1
+                description: número da página de dados.
+              pageSize:
+                type: integer
+                example: 10
+                minimum: 1
+                maximum: 100
+                description: tamanho da página de dados.
+              total:
+                type: integer
+                minimum: 0
+                example: 120
+                description: total de itens em todas as páginas.
+
+  schemas:
+    Cliente:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        email:
+          type: string
+        telefone:
+          type: string
+        cpf:
+          type: string
+        creationDate:
+          type: string
+        updateDate:
+          type: string
+        ativo:
+          type: boolean
+      example:
+        id: 11
+        nome: João da Silva
+        email: joaodasilva@email.com
+        cpf: "62192726090"
+        telefone: "27996697580"
+        ativo: true
+        creationDate: "2021-05-21T16:52:58.093Z"
+        updateDate: "2021-05-21T16:52:58.093Z"
+   
+    TransacaoExperiencia:
+      type: object
+      properties:
+        id:
+          type: integer
+        valor:
+          type: number
+        data:
+          type: string
+        creationDate:
+          type: string
+        updateDate:
+          type: string
+        clienteId:
+          type: integer
+      example:
+        id: 5
+        valor: 53.23        
+        data: "2020-05-21T00:00:00.000Z"        
+        creationDate: "2021-05-21T16:52:58.093Z"
+        updateDate: "2021-05-21T16:52:58.093Z"
+        clienteId: 7
+
+    AvaliacaoExperiencia:
+      type: object
+      properties:
+        id:
+          type: integer
+        nota:
+          type: number
+        descricao:
+          type: string
+        creationDate:
+          type: string
+        updateDate:
+          type: string
+        transacaoExperienciaId:
+          type: integer
+      example:
+        id: 9
+        nota: 8
+        descricao: 'Excelente!!!'        
+        creationDate: "2021-05-21T16:52:58.093Z"
+        updateDate: "2021-05-21T16:52:58.093Z"
+        transacaoExperienciaId: 9
