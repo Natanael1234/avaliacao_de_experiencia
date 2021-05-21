@@ -124,7 +124,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
             clientes[3] = res.body;
         });
 
-        it('Delete /cliente', async () => {
+        it('Delete /cliente/:clienteId', async () => {
             let date = new Date();
             let res = await request(await server).delete('/cliente/' + clientes[3].id);
             expect(res.status).toBe(200);
@@ -161,12 +161,13 @@ describe('API Avaliação de Experiência de Cliente', () => {
                 expect(res.body.id).toBeDefined();
                 expect(res.body.valor).toBe(dadosTransacoesExperiencias[i].valor);
                 expect(res.body.data).toBe(dadosTransacoesExperiencias[i].data);
+                expect(res.body.clienteId).toBe(dadosTransacoesExperiencias[i].clienteId);
                 expect(date.toISOString() < res.body.creationDate).toBeTruthy();
                 transacoesExperiencias.push(res.body);
             }
         });
 
-        it('Get cliente/:clienteId/transacao-experiencia', async () => {
+        it('Get /cliente/:clienteId/transacao-experiencia', async () => {
 
             let clienteId = clientes[2].id;
 
@@ -202,7 +203,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
                 expect(pageConcat[i].id).toBe(filteredTransacoesExperiencias[i].id);
                 expect(pageConcat[i].valor).toBe(filteredTransacoesExperiencias[i].valor);
                 expect(pageConcat[i].data).toBe(filteredTransacoesExperiencias[i].data);
-
+                expect(pageConcat[i].clienteId).toBe(filteredTransacoesExperiencias[i].clienteId);
             }
         });
 
@@ -238,7 +239,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
             for (let i = 0; i < transacoesExperiencias.length; i++) {
                 dadosAvaliacoesExperiencias.push({
                     nota: Math.floor(Math.random() * 10) + 1,
-                    descricao: 'Avaliação da experiência ' + transacoesExperiencias[i].id,
+                    comentario: 'Avaliação da experiência ' + transacoesExperiencias[i].id,
                     transacaoExperienciaId: transacoesExperiencias[i].id
                 });
             }
@@ -251,7 +252,8 @@ describe('API Avaliação de Experiência de Cliente', () => {
                 expect(res.status).toBe(200);
                 expect(res.body.id).toBeDefined();
                 expect(res.body.nota).toBe(dadosAvaliacoesExperiencias[i].nota);
-                expect(res.body.descricao).toBe(dadosAvaliacoesExperiencias[i].descricao);
+                expect(res.body.comentario).toBe(dadosAvaliacoesExperiencias[i].comentario);
+                expect(res.body.transacaoExperienciaId).toBe(dadosAvaliacoesExperiencias[i].transacaoExperienciaId);
                 expect(date.toISOString() < res.body.creationDate).toBeTruthy();
                 avaliacoesExperiencias.push(res.body);
             }
@@ -290,7 +292,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
             for (let i = 0; i < pageConcat.length; i++) {
                 expect(pageConcat[i].id).toBe(avaliacoesExperiencias[i].id);
                 expect(pageConcat[i].nota).toBe(avaliacoesExperiencias[i].nota);
-                expect(pageConcat[i].descricao).toBe(avaliacoesExperiencias[i].descricao);
+                expect(pageConcat[i].comentario).toBe(avaliacoesExperiencias[i].comentario);
                 expect(pageConcat[i].transacaoExperienciaId).toBe(avaliacoesExperiencias[i].transacaoExperienciaId);
             }
         });

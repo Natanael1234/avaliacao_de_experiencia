@@ -14,7 +14,7 @@ export class AvaliacaoExperiencia extends BaseEntity {
     nota: number;
 
     @Column({ nullable: false, unique: true, type: "varchar" })
-    descricao: string;
+    comentario: string;
 
     @CreateDateColumn({ type: "timestamp" })
     creationDate: Date;
@@ -27,12 +27,12 @@ export class AvaliacaoExperiencia extends BaseEntity {
     transacaoExperiencia: TransacaoExperiencia;
 
     @Column({ type: 'int', nullable: true })
-    transacaoExperienciaId?: number | null
+    transacaoExperienciaId?: number | null;
 
     static async build(data: any): Promise<AvaliacaoExperiencia> {
         let avaliacaoExperiencia = new AvaliacaoExperiencia();
         avaliacaoExperiencia.nota = data.nota;
-        avaliacaoExperiencia.descricao = data.descricao;
+        avaliacaoExperiencia.comentario = data.comentario;
         if (data.transacaoExperienciaId) {
             let avaliacaoExperienciaExistente = await AvaliacaoExperiencia.findOne({ where: { transacaoExperienciaId: data.transacaoExperienciaId } })
             if (avaliacaoExperienciaExistente) throw new HttpError('Avaliação de experiência já cadastrada', 409);
