@@ -47,7 +47,7 @@ clienteRouter.get('/clientes', async (req: Request, res: Response) => {
         let clientes = await Cliente.findAndCount({
             take: resultSet.pageSize,
             skip: resultSet.offset,
-            order: resultSet.order,
+            order: resultSet.order, 
             where
         });
         resultSet.list = <Cliente[]>clientes.map(cliente => cliente)[0];

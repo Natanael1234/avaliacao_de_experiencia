@@ -1,3 +1,3 @@
-import { getServer, closeServer } from '../src/app';
+import { getServer, closeServer } from './app';
 
 getServer();

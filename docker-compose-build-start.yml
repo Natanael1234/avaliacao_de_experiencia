@@ -1,0 +1,4 @@
+services:    
+    app:
+        # efetua o build e executa o servidor
+        command: npm run start:build

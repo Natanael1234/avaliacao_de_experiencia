@@ -2,7 +2,7 @@
     "name": "avaliacao-de-experiencia",
     "version": "0.0.1",
     "description": "Avaliação de Experiência de Usuário",
-    "main": "index.js",
+    "main": "./dist/index.js",
     "devDependencies": {
         "@types/bcrypt": "^3.0.0",
         "@types/express": "^4.17.11",
@@ -33,9 +33,11 @@
         "uuid": "^8.3.2"
     },
     "scripts": {
+        "build": "tsc", 
+        "start" : "node ./dist/index.js",
+        "start:build" : "tsc && node ./dist/index.js",
         "dev": "nodemon --config nodemon.json src/index.ts",
-        "dev:debugOLD": "nodemon --config nodemon.json --inspect-brk src/index.ts",
         "dev:debug": "nodemon --config nodemon.json --inspect src/index.ts",
-        "test": "jest"
+        "test": "jest"        
     }
 }

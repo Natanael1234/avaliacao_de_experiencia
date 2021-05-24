@@ -1,0 +1,5 @@
+services:
+    app:
+        # executa o build em JavaScript
+        command: npm run start
+        

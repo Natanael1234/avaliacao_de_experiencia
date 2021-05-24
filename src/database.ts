@@ -18,8 +18,15 @@ export class Database {
     }
 
     public static async recreateDatabase() {
-        await this.connection.dropDatabase();
-        await this.connection.synchronize();
+        try {
+            console.log('Recriando a base de dados...');
+            await this.connection.dropDatabase();
+            await this.connection.synchronize();
+            console.log('Base de dados Recriada.');            
+        } catch (error) {
+            console.error('Falha ao recriar base de dados.');            
+            throw error;
+        }
     }
 
 }

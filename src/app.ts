@@ -13,8 +13,8 @@ const getServer = async () => {
     app.use(clienteRouter);
     app.use(transacaoExperienciaRouter);
     app.use(avaliacaoExperienciaRouter);
-    let server = await app.listen(5000);
-    console.log('Listening at PORT ', 5000);
+    let server = await app.listen(3000);
+    console.log('Listening at PORT ', 3000);
     return server;
 }
 

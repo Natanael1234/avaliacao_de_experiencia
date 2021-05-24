@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+    mysqldb:
+        container_name: banco_avaliacao_experiencia
+        image: mysql
+        restart: always
+        env_file: ./.env
+        environment:
+            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+            MYSQL_DATABASE: $MYSQL_DATABASE
+            MYSQL_TCP_PORT: $MYSQL_TCP_PORT
+        ports:
+            - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
+        volumes:
+            - db-config:/etc/mysql
+            - db-data:/var/lib/mysql
+            - ./db/backup/files/:/data_backup/data
+    app:
+        container_name: app_avaliacao_de_experiencia
+        build: .
+        environment:
+            BACKEND_SERVER: "docker-compose"
+        ports:
+            - 3000:3000
+        volumes:
+            - .:/usr/app
+volumes:
+    db-config:
+    db-data:

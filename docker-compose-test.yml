@@ -1,0 +1,4 @@
+services:    
+    app:
+        # executa os estes automatizados
+        command: npm run test

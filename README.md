@@ -1,28 +1,57 @@
 # Avaliação de experiência de cliente.
 
+## Stack
 
-NodeJS + Express + TypeOrm + MySQL + Jest + SuperTest
+OpenApi/Swagger + NodeJS + ExpressJS + Typescrypt + TypeOrm + MySQL + Jest + SuperTest.
 
 ## Comandos
 
-### ```npm i```
+### npm i
 
 Instala as dependências.
 
-### ```npm run start```
+## Execução na Máquina Local.
 
-Inicia o servidor de desenvolvimento local.
+As configurações do banco de dados para execução na máquina local se encontram em ormconfig.js.
+
+A estrutura do Banco deve ser gerada automáticamente pela aplicação.
+
+### npm run build
+
+Executa um build. Gera código JavaScript na pasta dist.
+
+### run start
+
+Executa o servidor da aplicação.
+
+### npm run test
+
+Executa o servidor da aplicação no Docker.
+
+### npm run start:build
+
+Efetua o build e executa o servidor da aplicação.
+
+### npm run dev
+
+Executa a aplicação com o Nodemon na máquina local.
+
+### npm run dev:debug
+
+Executa a aplicação com o Nodemon para depuração com live reload na máquina local. É necessário executar o debugger do Visual Studio Code em seguida.
 
 
+## Execução via Docker-Composer
 
-### Debugging with live reload
+###  docker-compose -f docker-compose.yml -f docker-compose-test.yml up
 
-1 - Run:
+Executa os testes automatizados no Docker.
 
-### ```npm run dev:debug``` 
+###  docker-compose -f docker-compose.yml -f docker-compose-start.yml up
 
-2 - Start debugging in VSCode.
+Executa o servidor da aplicação no Docker.
 
-### Teste
+###  docker-compose -f docker-compose-build-start.yml  
 
-```npm run test```
+Efetua o build e executa o servidor da aplicação no Docker.
+
