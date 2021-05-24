@@ -92,7 +92,6 @@ paths:
     get:
       description: Lista as Transações/Experiências de um Cliente com paginação.
       parameters:
-        - $ref: "#/components/parameters/page"
         - $ref: "#/components/parameters/pageParam"
         - $ref: "#/components/parameters/pageSizeParam"
         - $ref: "#/components/parameters/orderByParam"
