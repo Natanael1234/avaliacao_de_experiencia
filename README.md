@@ -51,7 +51,7 @@ Executa os testes automatizados no Docker.
 
 Executa o servidor da aplicação no Docker.
 
-###  docker-compose -f docker-compose-build-start.yml  
+###  docker-compose -f docker-compose.yml -f docker-compose-build-start.yml  
 
 Efetua o build e executa o servidor da aplicação no Docker.
 
