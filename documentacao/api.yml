@@ -5,6 +5,60 @@ info:
 servers:
   - url: localhost:3000
 paths:
+  /loja:
+    post:
+      description: Cria uma loja.
+      requestBody:
+        $ref: "#/components/requestBodies/PostLoja"
+      responses:
+        "200":
+          $ref: "#/components/responses/Loja"
+        "400":
+          description: Loja não deve ser especificada.
+        "404":
+          description: Loja não encontrada.
+        "500":
+          description: Erro indefinido.
+    put:
+      description: Atualiza uma Loja.
+      requestBody:
+        $ref: "#/components/requestBodies/PutLoja"
+      responses:
+        "200":
+          $ref: "#/components/responses/Loja"
+        "500":
+          description: Erro indefinido.
+  /lojas:
+    get:
+      description: Lista Lojas com paginação.
+      parameters:
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/pageSizeParam"
+        - $ref: "#/components/parameters/orderByParam"
+        - $ref: "#/components/parameters/orderDirectionParam"
+        - $ref: "#/components/parameters/ativaParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/Lojas"
+        "400":
+          description: Parâmetro inválido.
+        "500":
+          description: Erro indefinido.
+  /loja/{lojaId}:
+    delete:
+      description: Deleção lógica de um Loja.
+      parameters:
+        - $ref: "#/components/parameters/lojaIdParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/Loja"
+        "400":
+          description: Loja indefinida.
+        "404":
+          description: Loja não encontrada.
+        "500":
+          description: Erro indefinida.
+
   /cliente:
     post:
       description: Cria um cliente.
@@ -33,12 +87,10 @@ paths:
       description: Lista clientes com paginação.
       parameters:
         - $ref: "#/components/parameters/pageParam"
-        - $ref: "#/components/parameters/pageParam"
         - $ref: "#/components/parameters/pageSizeParam"
         - $ref: "#/components/parameters/orderByParam"
         - $ref: "#/components/parameters/orderDirectionParam"
         - $ref: "#/components/parameters/ativoParam"
-        - $ref: "#/components/parameters/clienteList"
       responses:
         "200":
           $ref: "#/components/responses/Clientes"
@@ -53,7 +105,7 @@ paths:
         - $ref: "#/components/parameters/clientIdParam"
       responses:
         "200":
-          $ref: '#/components/responses/Cliente'
+          $ref: "#/components/responses/Cliente"
         "400":
           description: Cliente indefinido.
         "404":
@@ -72,7 +124,7 @@ paths:
         "400":
           description: Transação/Experiência não deve ser especificada ou Cliente indefinido.
         "404":
-          description: Cliente não inexistente.
+          description: Cliente inexistente.
         "500":
           description: Erro indefinido.
     put:
@@ -92,13 +144,11 @@ paths:
     get:
       description: Lista as Transações/Experiências de um Cliente com paginação.
       parameters:
-        - $ref: "#/components/parameters/page"
         - $ref: "#/components/parameters/pageParam"
         - $ref: "#/components/parameters/pageSizeParam"
         - $ref: "#/components/parameters/orderByParam"
         - $ref: "#/components/parameters/orderDirectionParam"
         - $ref: "#/components/parameters/clientIdParam"
-        - $ref: "#/components/parameters/transacoesExperienciasList"
       responses:
         "200":
           $ref: "#/components/responses/TransacoesExperiencias"
@@ -129,7 +179,6 @@ paths:
       description: Lista as Avaliações de Experiências com paginação.
       parameters:
         - $ref: "#/components/parameters/pageParam"
-        - $ref: "#/components/parameters/pageParam"
         - $ref: "#/components/parameters/pageSizeParam"
         - $ref: "#/components/parameters/orderByParam"
         - $ref: "#/components/parameters/orderDirectionParam"
@@ -141,7 +190,47 @@ paths:
           description: Erro indefinido.
 
 components:
+
   requestBodies:
+    PostLoja:
+      description: JSON contendo uma nova Loja.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              nome:
+                type: string
+                nullable: false
+              ativa:
+                type: boolean
+                default: true
+            example:
+              nome: Loja 1
+              ativa: true
+    PutLoja:
+      description: JSON contendo dados a serem salvos em um Loja.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                nullable: false
+              nome:
+                type: string
+                nullable: false
+              ativa:
+                type: boolean
+                default: true
+            example:
+              id: 1
+              nome: Loja A
+              ativa: false
+
     PostCliente:
       description: JSON contendo um novo cliente.
       required: true
@@ -204,6 +293,7 @@ components:
               telefone: 91987650174
               cpf: 23837266648
               ativo: false
+
     PostTransacaoExperiencia:
       description: JSON contendo dados da Transação\Experiência a ser criada.
       content:
@@ -220,10 +310,14 @@ components:
               clienteId:
                 type: integer
                 nullable: false
+              lojaId:
+                type: integer
+                nullable: false
             example:
               valor: 53.3
               data: "2021-06-20T03:00:00.000Z"
               clienteId: 2
+              lojaId: 3
     PutTransacaoExperiencia:
       description: JSON contendo dados da Transação\Experiência a ser atualizada.
       content:
@@ -243,13 +337,18 @@ components:
               clienteId:
                 type: integer
                 nullable: false
+              lojaId:
+                type: integer
+                nullable: false
             example:
               id: 2
               valor: 53.3
               data: "2021-05-21T03:00:00.000Z"
               clienteId: 3
+              lojaId: 1
+
     PostAvaliacaoExperiencia:
-      description: JSON contendo dados da Avaiação de Experiência
+      description: JSON contendo dados da Avaliação de Experiência
       content:
         application/json:
           schema:
@@ -311,43 +410,74 @@ components:
       required: false
       schema:
         type: boolean
-      description: filtrar clientes ativos.
-    avaliacoesExperienciasList:
-      name: list
+      description: filtrar registros ativos.
+    ativaParam:
+      name: ativa
       in: query
-      required: true
+      required: false
       schema:
-        type: array
-        items:
-          $ref: "#/components/schemas/AvaliacaoExperiencia"
-      description: Lista de Avaliações de Experiências.
-    transacoesExperienciasList:
-      name: list
-      in: query
-      required: true
-      schema:
-        type: array
-        items:
-          $ref: "#/components/schemas/TransacaoExperiencia"
-      description: Lista de Transações/Experiências.
-    clienteList:
-      name: list
-      in: query
-      required: true
-      schema:
-        type: array
-        items:
-          $ref: "#/components/schemas/Cliente"
-      description: Lista de clientes.
+        type: boolean
+      description: filtrar registros ativos.
     clientIdParam:
       name: clienteId
       in: path
       required: true
       schema:
         type: integer
-      description: id do cliente.
+      description: id do Cliente.
+    lojaIdParam:
+      name: lojaId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: id do Loja.
 
   responses:
+    Loja:
+      description: Loja salva.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Loja"
+    Lojas:
+      description: Lista de Lojas com paginação.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              list:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Loja"
+              order:
+                type: object
+                nullable: true
+                example:
+                  nome: "ASC"
+              offset:
+                type: integer
+                minimum: 0
+                example: 10
+                description: número de itens antes do primeiro item da página.
+              page:
+                type: integer
+                example: 2
+                minimum: 1
+                description: número da página de dados.
+              pageSize:
+                type: integer
+                example: 10
+                minimum: 1
+                maximum: 100
+                description: tamanho da página de dados.
+              total:
+                type: integer
+                minimum: 0
+                example: 120
+                description: total de itens em todas as páginas.
+
     Cliente:
       description: Cliente salvo.
       content:
@@ -398,7 +528,7 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/TransacaoExperiencia"
-    
+
     TransacoesExperiencias:
       description: Lista de Transações/Experiências com paginação.
       content:
@@ -482,6 +612,26 @@ components:
                 description: total de itens em todas as páginas.
 
   schemas:
+    Loja:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        creationDate:
+          type: string
+        updateDate:
+          type: string
+        ativa:
+          type: boolean
+      example:
+        id: 11
+        nome: Loja 1
+        creationDate: "2021-05-21T16:52:58.093Z"
+        updateDate: "2021-05-21T16:52:58.093Z"
+        ativa: true
+
     Cliente:
       type: object
       properties:
@@ -510,7 +660,7 @@ components:
         ativo: true
         creationDate: "2021-05-21T16:52:58.093Z"
         updateDate: "2021-05-21T16:52:58.093Z"
-   
+
     TransacaoExperiencia:
       type: object
       properties:
@@ -526,13 +676,16 @@ components:
           type: string
         clienteId:
           type: integer
+        lojaId:
+          type: integer
       example:
         id: 5
-        valor: 53.23        
-        data: "2020-05-21T00:00:00.000Z"        
+        valor: 53.23
+        data: "2020-05-21T00:00:00.000Z"
         creationDate: "2021-05-21T16:52:58.093Z"
         updateDate: "2021-05-21T16:52:58.093Z"
         clienteId: 7
+        lojaId: 3
 
     AvaliacaoExperiencia:
       type: object
@@ -552,7 +705,7 @@ components:
       example:
         id: 9
         nota: 8
-        descricao: 'Excelente!!!'        
+        descricao: "Excelente!!!"
         creationDate: "2021-05-21T16:52:58.093Z"
         updateDate: "2021-05-21T16:52:58.093Z"
         transacaoExperienciaId: 9

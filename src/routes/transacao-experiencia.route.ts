@@ -9,7 +9,7 @@ const transacaoExperienciaRouter = express.Router();
 async function getCliente(clienteId: any) {
     if (!clienteId) throw new HttpError('Cliente indefinido', 400);
     let cliente = await Cliente.findOne({ where: { id: clienteId } });
-    if (!cliente) throw new HttpError('Cliente não inexistente', 404);
+    if (!cliente) throw new HttpError('Cliente inexistente', 404);
     return cliente;
 }
 
@@ -33,6 +33,7 @@ transacaoExperienciaRouter.put('/transacao-experiencia', async (req: Request, re
         if (!transacaoExperiencia) throw new HttpError('Transação/Experiência não encontrada', 404);
         if (req.body.valor) transacaoExperiencia.valor = req.body.valor;
         if (req.body.data) transacaoExperiencia.data = new Date(req.body.data);
+        if (req.body.lojaId) transacaoExperiencia.lojaId = req.body.lojaId;
         transacaoExperiencia.updateDate = new Date();
         await transacaoExperiencia.save({ reload: true });
         return res.send(transacaoExperiencia);
