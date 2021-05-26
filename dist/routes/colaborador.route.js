@@ -39,29 +39,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.clienteRouter = void 0;
+exports.colaboradorRouter = void 0;
 var express_1 = __importDefault(require("express"));
-var cliente_entity_1 = require("../entity/cliente.entity");
 var http_error_1 = require("../errors/http-error");
 var paginationDTO_1 = require("../dto/paginationDTO");
-var clienteRouter = express_1.default.Router();
-exports.clienteRouter = clienteRouter;
-clienteRouter.post('/cliente', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var cliente, error_1;
+var colaborador_entity_1 = require("../entity/colaborador.entity");
+var colaboradorRouter = express_1.default.Router();
+exports.colaboradorRouter = colaboradorRouter;
+colaboradorRouter.post('/colaborador', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var colaborador, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
-                cliente = void 0;
+                colaborador = void 0;
                 if (req.body.id)
-                    throw new http_error_1.HttpError('Cliente não deve ser especificado', 400);
-                return [4 /*yield*/, cliente_entity_1.Cliente.build(req.body)];
+                    throw new http_error_1.HttpError('Colaborador não deve ser especificado', 400);
+                return [4 /*yield*/, colaborador_entity_1.Colaborador.build(req.body)];
             case 1:
-                cliente = _a.sent();
-                return [4 /*yield*/, cliente.save()];
+                colaborador = _a.sent();
+                return [4 /*yield*/, colaborador.save()];
             case 2:
                 _a.sent();
-                return [2 /*return*/, res.send(cliente)];
+                return [2 /*return*/, res.send(colaborador)];
             case 3:
                 error_1 = _a.sent();
                 console.error(error_1.message);
@@ -70,34 +70,28 @@ clienteRouter.post('/cliente', function (req, res) { return __awaiter(void 0, vo
         }
     });
 }); });
-clienteRouter.put('/cliente', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var cliente, error_2;
+colaboradorRouter.put('/colaborador', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var colaborador, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
                 if (!req.body.id)
-                    throw new http_error_1.HttpError('Cliente não especificado', 400);
-                return [4 /*yield*/, cliente_entity_1.Cliente.findOne({ where: { id: req.body.id } })];
+                    throw new http_error_1.HttpError('Colaborador não especificado', 400);
+                return [4 /*yield*/, colaborador_entity_1.Colaborador.findOne({ where: { id: req.body.id } })];
             case 1:
-                cliente = _a.sent();
-                if (!cliente)
-                    throw new http_error_1.HttpError('Cliente indefinido', 404);
+                colaborador = _a.sent();
+                if (!colaborador)
+                    throw new http_error_1.HttpError('Colaborador indefinido', 404);
                 if (req.body.nome)
-                    cliente.nome = req.body.nome;
-                if (req.body.email)
-                    cliente.email = req.body.email;
-                if (req.body.telefone)
-                    cliente.telefone = req.body.telefone;
-                if (req.body.cpf)
-                    cliente.cpf = req.body.cpf;
+                    colaborador.nome = req.body.nome;
                 if (req.body.ativo != undefined && req.body.ativo != null)
-                    cliente.ativo = !!req.body.ativo;
-                cliente.updateDate = new Date();
-                return [4 /*yield*/, cliente.save({ reload: true })];
+                    colaborador.ativo = !!req.body.ativo;
+                colaborador.updateDate = new Date();
+                return [4 /*yield*/, colaborador.save({ reload: true })];
             case 2:
                 _a.sent();
-                return [2 /*return*/, res.send(cliente)];
+                return [2 /*return*/, res.send(colaborador)];
             case 3:
                 error_2 = _a.sent();
                 console.error(error_2.message);
@@ -106,30 +100,22 @@ clienteRouter.put('/cliente', function (req, res) { return __awaiter(void 0, voi
         }
     });
 }); });
-clienteRouter.get('/clientes', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var resultSet, where, clientes, error_3;
+colaboradorRouter.get('/colaboradores', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var resultSet, colaboradores, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 resultSet = paginationDTO_1.ResultSetDTO.queryParamsToPaginationDTO(req.query);
-                where = {};
-                if (req.query.ativo == 'true')
-                    where.ativo = true;
-                else if (req.query.ativo == 'false')
-                    where.ativo = false;
-                else if (req.query.ativo != undefined)
-                    throw new http_error_1.HttpError('Parâmetro inválido', 400);
-                return [4 /*yield*/, cliente_entity_1.Cliente.findAndCount({
+                return [4 /*yield*/, colaborador_entity_1.Colaborador.findAndCount({
                         take: resultSet.pageSize,
                         skip: resultSet.offset,
-                        order: resultSet.order,
-                        where: where
+                        order: resultSet.order
                     })];
             case 1:
-                clientes = _a.sent();
-                resultSet.list = clientes.map(function (cliente) { return cliente; })[0];
-                resultSet.total = clientes[1];
+                colaboradores = _a.sent();
+                resultSet.list = colaboradores.map(function (colaborador) { return colaborador; })[0];
+                resultSet.total = colaboradores[1];
                 return [2 /*return*/, res.send(resultSet)];
             case 2:
                 error_3 = _a.sent();
@@ -139,26 +125,26 @@ clienteRouter.get('/clientes', function (req, res) { return __awaiter(void 0, vo
         }
     });
 }); });
-clienteRouter.delete('/cliente/:clienteId', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var clienteId, cliente, error_4;
+colaboradorRouter.delete('/colaborador/:colaboradorId', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var colaboradorId, colaborador, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
-                if (!req.params.clienteId)
-                    throw new http_error_1.HttpError('Cliente indefinido', 400);
-                clienteId = Number(req.params.clienteId);
-                return [4 /*yield*/, cliente_entity_1.Cliente.findOne({ where: { id: clienteId } })];
+                if (!req.params.colaboradorId)
+                    throw new http_error_1.HttpError('Colaborador indefinido', 400);
+                colaboradorId = Number(req.params.colaboradorId);
+                return [4 /*yield*/, colaborador_entity_1.Colaborador.findOne({ where: { id: colaboradorId } })];
             case 1:
-                cliente = _a.sent();
-                if (!cliente)
-                    throw new http_error_1.HttpError('Cliente não encontrado', 404);
-                cliente.updateDate = new Date();
-                cliente.ativo = false;
-                return [4 /*yield*/, cliente.save({ reload: true })];
+                colaborador = _a.sent();
+                if (!colaborador)
+                    throw new http_error_1.HttpError('Colaborador não encontrado', 404);
+                colaborador.ativo = false;
+                colaborador.updateDate = new Date();
+                return [4 /*yield*/, colaborador.save({ reload: true })];
             case 2:
                 _a.sent();
-                return [2 /*return*/, res.send(cliente)];
+                return [2 /*return*/, res.send(colaborador)];
             case 3:
                 error_4 = _a.sent();
                 console.error(error_4.message);

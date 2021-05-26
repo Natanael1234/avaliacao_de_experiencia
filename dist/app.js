@@ -46,6 +46,8 @@ var database_1 = require("./database");
 var cliente_route_1 = require("./routes/cliente.route");
 var transacao_experiencia_route_1 = require("./routes/transacao-experiencia.route");
 var avaliacao_experiencia_route_1 = require("./routes/avaliacao-experiencia.route");
+var loja_route_1 = require("./routes/loja.route");
+var colaborador_route_1 = require("./routes/colaborador.route");
 var getServer = function () { return __awaiter(void 0, void 0, void 0, function () {
     var app, server;
     return __generator(this, function (_a) {
@@ -57,6 +59,8 @@ var getServer = function () { return __awaiter(void 0, void 0, void 0, function 
             case 1:
                 _a.sent();
                 app.use(cliente_route_1.clienteRouter);
+                app.use(colaborador_route_1.colaboradorRouter);
+                app.use(loja_route_1.lojaRouter);
                 app.use(transacao_experiencia_route_1.transacaoExperienciaRouter);
                 app.use(avaliacao_experiencia_route_1.avaliacaoExperienciaRouter);
                 return [4 /*yield*/, app.listen(3000)];

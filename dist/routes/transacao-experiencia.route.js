@@ -59,7 +59,7 @@ function getCliente(clienteId) {
                 case 1:
                     cliente = _a.sent();
                     if (!cliente)
-                        throw new http_error_1.HttpError('Cliente não inexistente', 404);
+                        throw new http_error_1.HttpError('Cliente inexistente', 404);
                     return [2 /*return*/, cliente];
             }
         });
@@ -106,6 +106,10 @@ transacaoExperienciaRouter.put('/transacao-experiencia', function (req, res) { r
                     transacaoExperiencia.valor = req.body.valor;
                 if (req.body.data)
                     transacaoExperiencia.data = new Date(req.body.data);
+                if (req.body.lojaId)
+                    transacaoExperiencia.lojaId = req.body.lojaId;
+                if (req.body.colaboradorId)
+                    transacaoExperiencia.colaboradorId = req.body.colaboradorId;
                 transacaoExperiencia.updateDate = new Date();
                 return [4 /*yield*/, transacaoExperiencia.save({ reload: true })];
             case 2:

@@ -62,6 +62,8 @@ var typeorm_1 = require("typeorm");
 var http_error_1 = require("../errors/http-error");
 var avaliacao_experiencia_1 = require("./avaliacao-experiencia");
 var cliente_entity_1 = require("./cliente.entity");
+var colaborador_entity_1 = require("./colaborador.entity");
+var loja_entity_1 = require("./loja.entity");
 var TransacaoExperiencia = /** @class */ (function (_super) {
     __extends(TransacaoExperiencia, _super);
     function TransacaoExperiencia() {
@@ -80,17 +82,53 @@ var TransacaoExperiencia = /** @class */ (function (_super) {
                     case 1:
                         cliente = _a.sent();
                         if (!cliente)
-                            throw new http_error_1.HttpError('Cliente não inexistente', 404);
+                            throw new http_error_1.HttpError('Cliente inexistente', 404);
                         return [2 /*return*/, cliente];
+                }
+            });
+        });
+    };
+    TransacaoExperiencia.getLoja = function (lojaId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var loja;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!lojaId)
+                            throw new http_error_1.HttpError('Loja indefinida', 400);
+                        return [4 /*yield*/, loja_entity_1.Loja.findOne({ where: { id: lojaId } })];
+                    case 1:
+                        loja = _a.sent();
+                        if (!loja)
+                            throw new http_error_1.HttpError('Loja não inexistente', 404);
+                        return [2 /*return*/, loja];
+                }
+            });
+        });
+    };
+    TransacaoExperiencia.getColaborador = function (colaboradorId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var colaborador;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!colaboradorId)
+                            throw new http_error_1.HttpError('Colaborador indefinido', 400);
+                        return [4 /*yield*/, colaborador_entity_1.Colaborador.findOne({ where: { id: colaboradorId } })];
+                    case 1:
+                        colaborador = _a.sent();
+                        if (!colaborador)
+                            throw new http_error_1.HttpError('Colaborador não inexistente', 404);
+                        return [2 /*return*/, colaborador];
                 }
             });
         });
     };
     TransacaoExperiencia.build = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var transacaoExperiencia, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var transacaoExperiencia, _a, _b, _c;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0:
                         transacaoExperiencia = new TransacaoExperiencia_1();
                         transacaoExperiencia.valor = data.valor;
@@ -100,9 +138,23 @@ var TransacaoExperiencia = /** @class */ (function (_super) {
                         _a = transacaoExperiencia;
                         return [4 /*yield*/, TransacaoExperiencia_1.getCliente(data.clienteId)];
                     case 1:
-                        _a.cliente = _b.sent();
-                        _b.label = 2;
-                    case 2: return [2 /*return*/, transacaoExperiencia];
+                        _a.cliente = _d.sent();
+                        _d.label = 2;
+                    case 2:
+                        if (!data.lojaId) return [3 /*break*/, 4];
+                        _b = transacaoExperiencia;
+                        return [4 /*yield*/, TransacaoExperiencia_1.getLoja(data.lojaId)];
+                    case 3:
+                        _b.loja = _d.sent();
+                        _d.label = 4;
+                    case 4:
+                        if (!data.colaboradorId) return [3 /*break*/, 6];
+                        _c = transacaoExperiencia;
+                        return [4 /*yield*/, TransacaoExperiencia_1.getColaborador(data.colaboradorId)];
+                    case 5:
+                        _c.colaborador = _d.sent();
+                        _d.label = 6;
+                    case 6: return [2 /*return*/, transacaoExperiencia];
                 }
             });
         });
@@ -129,6 +181,18 @@ var TransacaoExperiencia = /** @class */ (function (_super) {
     __decorate([
         typeorm_1.Column({ type: 'int', nullable: true })
     ], TransacaoExperiencia.prototype, "clienteId", void 0);
+    __decorate([
+        typeorm_1.ManyToOne(function () { return loja_entity_1.Loja; }, function (loja) { return loja.transacaoExperiencia; })
+    ], TransacaoExperiencia.prototype, "loja", void 0);
+    __decorate([
+        typeorm_1.Column({ type: 'int', nullable: true })
+    ], TransacaoExperiencia.prototype, "lojaId", void 0);
+    __decorate([
+        typeorm_1.ManyToOne(function () { return colaborador_entity_1.Colaborador; }, function (colaborador) { return colaborador.transacaoExperiencia; })
+    ], TransacaoExperiencia.prototype, "colaborador", void 0);
+    __decorate([
+        typeorm_1.Column({ type: 'int', nullable: true })
+    ], TransacaoExperiencia.prototype, "colaboradorId", void 0);
     __decorate([
         typeorm_1.OneToOne(function () { return avaliacao_experiencia_1.AvaliacaoExperiencia; }, function (avaliacaoExperiencia) { return avaliacaoExperiencia.transacaoExperiencia; })
     ], TransacaoExperiencia.prototype, "avaliacaoExperiencia", void 0);
