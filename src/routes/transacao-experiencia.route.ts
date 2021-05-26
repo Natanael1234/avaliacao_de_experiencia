@@ -34,10 +34,11 @@ transacaoExperienciaRouter.put('/transacao-experiencia', async (req: Request, re
         if (req.body.valor) transacaoExperiencia.valor = req.body.valor;
         if (req.body.data) transacaoExperiencia.data = new Date(req.body.data);
         if (req.body.lojaId) transacaoExperiencia.lojaId = req.body.lojaId;
+        if (req.body.colaboradorId) transacaoExperiencia.colaboradorId = req.body.colaboradorId;
         transacaoExperiencia.updateDate = new Date();
         await transacaoExperiencia.save({ reload: true });
         return res.send(transacaoExperiencia);
-    } catch (error) {        
+    } catch (error) {
         console.error(error.message);
         return res.status(error['status'] || 500).send(error.message);
     }

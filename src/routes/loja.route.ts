@@ -24,7 +24,7 @@ lojaRouter.put('/loja', async (req: Request, res: Response) => {
         let loja = await Loja.findOne({ where: { id: req.body.id } });
         if (!loja) throw new HttpError('Loja indefinida', 404);
         if (req.body.nome) loja.nome = req.body.nome;
-        if (req.body.ativa != undefined && req.body.ativa != null) loja.ativa;
+        if (req.body.ativa != undefined && req.body.ativa != null) loja.ativa = !!req.body.ativa;
         loja.updateDate = new Date();
         await loja.save({ reload: true });
         return res.send(loja)
@@ -61,7 +61,7 @@ lojaRouter.delete('/loja/:lojaId', async (req: Request, res: Response) => {
         if (!req.params.lojaId) throw new HttpError('Loja indefinida', 400);
         let lojaId = Number(req.params.lojaId);
         let loja = await Loja.findOne({ where: { id: lojaId } });
-        if (!loja) throw new HttpError('Loja não encontrado', 404);
+        if (!loja) throw new HttpError('Loja não encontrada', 404);
         loja.updateDate = new Date();
         loja.ativa = false;
         await loja.save({ reload: true });

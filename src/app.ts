@@ -6,12 +6,14 @@ import { Server } from "http";
 import { transacaoExperienciaRouter } from "./routes/transacao-experiencia.route";
 import { avaliacaoExperienciaRouter } from "./routes/avaliacao-experiencia.route";
 import { lojaRouter } from "./routes/loja.route";
+import { colaboradorRouter } from "./routes/colaborador.route";
 
 const getServer = async () => {
     const app = express();
     app.use(express.json());
     await Database.initialize();
     app.use(clienteRouter);
+    app.use(colaboradorRouter);
     app.use(lojaRouter);
     app.use(transacaoExperienciaRouter);
     app.use(avaliacaoExperienciaRouter);

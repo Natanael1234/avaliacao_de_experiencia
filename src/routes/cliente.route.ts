@@ -27,7 +27,7 @@ clienteRouter.put('/cliente', async (req: Request, res: Response) => {
         if (req.body.email) cliente.email = req.body.email;
         if (req.body.telefone) cliente.telefone = req.body.telefone;
         if (req.body.cpf) cliente.cpf = req.body.cpf;
-        if (req.body.ativo != undefined && req.body.ativo != null) cliente.ativo = !!req.body;
+        if (req.body.ativo != undefined && req.body.ativo != null) cliente.ativo = !!req.body.ativo;
         cliente.updateDate = new Date();
         await cliente.save({ reload: true });
         return res.send(cliente)

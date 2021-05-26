@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, C
 import { HttpError } from "../errors/http-error";
 import { AvaliacaoExperiencia } from "./avaliacao-experiencia";
 import { Cliente } from "./cliente.entity";
+import { Colaborador } from "./colaborador.entity";
 import { Loja } from "./loja.entity";
 
 @Entity()
@@ -33,6 +34,12 @@ export class TransacaoExperiencia extends BaseEntity {
 
     @Column({ type: 'int', nullable: true })
     lojaId?: number | null
+    
+    @ManyToOne(() => Colaborador, colaborador => colaborador.transacaoExperiencia)
+    colaborador: Colaborador;
+
+    @Column({ type: 'int', nullable: true })
+    colaboradorId?: number | null
 
     @OneToOne(() => AvaliacaoExperiencia, avaliacaoExperiencia => avaliacaoExperiencia.transacaoExperiencia) 
     avaliacaoExperiencia: AvaliacaoExperiencia;
@@ -51,6 +58,13 @@ export class TransacaoExperiencia extends BaseEntity {
         return loja;
     }
 
+    static async getColaborador(colaboradorId: any) {
+        if (!colaboradorId) throw new HttpError('Colaborador indefinido', 400);
+        let colaborador = await Colaborador.findOne({ where: { id: colaboradorId } });        
+        if (!colaborador) throw new HttpError('Colaborador não inexistente', 404);
+        return colaborador;
+    }
+
     static async build(data: any): Promise<TransacaoExperiencia> {
         let transacaoExperiencia = new TransacaoExperiencia();
         transacaoExperiencia.valor = data.valor;
@@ -60,6 +74,9 @@ export class TransacaoExperiencia extends BaseEntity {
         }
         if (data.lojaId) {
             transacaoExperiencia.loja = await TransacaoExperiencia.getLoja(data.lojaId);
+        }
+        if (data.colaboradorId) {
+            transacaoExperiencia.colaborador = await TransacaoExperiencia.getColaborador(data.colaboradorId);
         }
         return transacaoExperiencia;
     }

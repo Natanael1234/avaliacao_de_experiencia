@@ -46,7 +46,7 @@ paths:
           description: Erro indefinido.
   /loja/{lojaId}:
     delete:
-      description: Deleção lógica de um Loja.
+      description: Deleção lógica de uma Loja.
       parameters:
         - $ref: "#/components/parameters/lojaIdParam"
       responses:
@@ -56,6 +56,60 @@ paths:
           description: Loja indefinida.
         "404":
           description: Loja não encontrada.
+        "500":
+          description: Erro indefinida.
+
+  /colaborador:
+    post:
+      description: Cria um Colaborador.
+      requestBody:
+        $ref: "#/components/requestBodies/PostColaborador"
+      responses:
+        "200":
+          $ref: "#/components/responses/Colaborador"
+        "400":
+          description: Colaborador não deve ser especificado.
+        "404":
+          description: Colaborador não encontrado.
+        "500":
+          description: Erro indefinido.
+    put:
+      description: Atualiza um Colaborador.
+      requestBody:
+        $ref: "#/components/requestBodies/PutColaborador"
+      responses:
+        "200":
+          $ref: "#/components/responses/Colaborador"
+        "500":
+          description: Erro indefinido.
+  /colaboradores:
+    get:
+      description: Lista Colaboradores com paginação.
+      parameters:
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/pageSizeParam"
+        - $ref: "#/components/parameters/orderByParam"
+        - $ref: "#/components/parameters/orderDirectionParam"
+        - $ref: "#/components/parameters/ativaParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/Colaboradores"
+        "400":
+          description: Parâmetro inválido.
+        "500":
+          description: Erro indefinido.
+  /colaborador/{colaboradorId}:
+    delete:
+      description: Deleção lógica de um Colaborador.
+      parameters:
+        - $ref: "#/components/parameters/colaboradorIdParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/Colaborador"
+        "400":
+          description: Colaborador indefinido.
+        "404":
+          description: Colaborador não encontrado.
         "500":
           description: Erro indefinida.
 
@@ -124,7 +178,7 @@ paths:
         "400":
           description: Transação/Experiência não deve ser especificada ou Cliente indefinido.
         "404":
-          description: Cliente inexistente.
+          description: Cliente inexistente ou  Loja inexistente ou Colaborador Inexistente.
         "500":
           description: Erro indefinido.
     put:
@@ -190,7 +244,6 @@ paths:
           description: Erro indefinido.
 
 components:
-
   requestBodies:
     PostLoja:
       description: JSON contendo uma nova Loja.
@@ -231,8 +284,47 @@ components:
               nome: Loja A
               ativa: false
 
+    PostColaborador:
+      description: JSON contendo um novo Colaborador.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              nome:
+                type: string
+                nullable: false
+              ativo:
+                type: boolean
+                default: true
+            example:
+              nome: Colaborador 1
+              ativo: true
+    PutColaborador:
+      description: JSON contendo dados a serem salvos em um Colaborador.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                nullable: false
+              nome:
+                type: string
+                nullable: false
+              ativa:
+                type: boolean
+                default: true
+            example:
+              id: 1
+              nome: Colaborador A
+              ativa: false
+
     PostCliente:
-      description: JSON contendo um novo cliente.
+      description: JSON contendo um novo Cliente.
       required: true
       content:
         application/json:
@@ -261,7 +353,7 @@ components:
               cpf: 05977788096
               ativo: true
     PutCliente:
-      description: JSON contendo dados a serem salvos em um cliente.
+      description: JSON contendo dados a serem salvos em um Cliente.
       required: true
       content:
         application/json:
@@ -395,6 +487,7 @@ components:
       schema:
         type: string
         enum: [id, nome, email, telefone, cpf, creationDate, updateDate, ativo]
+        example: nome
       description: coluna de ordenação.
     orderDirectionParam:
       name: orderDirectionParam
@@ -402,8 +495,9 @@ components:
       required: false
       schema:
         type: string
-        enum: ["ASC, DESC"]
+        enum: [ASC, DESC]
       description: direção de ordenação.
+      example: ASC
     ativoParam:
       name: ativo
       in: query
@@ -411,6 +505,7 @@ components:
       schema:
         type: boolean
       description: filtrar registros ativos.
+      example: true
     ativaParam:
       name: ativa
       in: query
@@ -418,6 +513,7 @@ components:
       schema:
         type: boolean
       description: filtrar registros ativos.
+      example: true
     clientIdParam:
       name: clienteId
       in: path
@@ -432,6 +528,13 @@ components:
       schema:
         type: integer
       description: id do Loja.
+    colaboradorIdParam:
+      name: colaboradorId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: id do Colaborador.
 
   responses:
     Loja:
@@ -451,6 +554,50 @@ components:
                 type: array
                 items:
                   $ref: "#/components/schemas/Loja"
+              order:
+                type: object
+                nullable: true
+                example:
+                  nome: "ASC"
+              offset:
+                type: integer
+                minimum: 0
+                example: 10
+                description: número de itens antes do primeiro item da página.
+              page:
+                type: integer
+                example: 2
+                minimum: 1
+                description: número da página de dados.
+              pageSize:
+                type: integer
+                example: 10
+                minimum: 1
+                maximum: 100
+                description: tamanho da página de dados.
+              total:
+                type: integer
+                minimum: 0
+                example: 120
+                description: total de itens em todas as páginas.
+
+    Colaborador:
+      description: Colaborador salvo.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Colaborador"
+    Colaboradores:
+      description: Lista de Colaboradores com paginação.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              list:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Colaborador"
               order:
                 type: object
                 nullable: true
@@ -631,6 +778,26 @@ components:
         creationDate: "2021-05-21T16:52:58.093Z"
         updateDate: "2021-05-21T16:52:58.093Z"
         ativa: true
+
+    Colaborador:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        creationDate:
+          type: string
+        updateDate:
+          type: string
+        ativo:
+          type: boolean
+      example:
+        id: 11
+        nome: Paulo Henrique
+        creationDate: "2021-05-21T16:52:58.093Z"
+        updateDate: "2021-05-21T16:52:58.093Z"
+        ativo: true
 
     Cliente:
       type: object
