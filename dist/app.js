@@ -48,6 +48,8 @@ var transacao_experiencia_route_1 = require("./routes/transacao-experiencia.rout
 var avaliacao_experiencia_route_1 = require("./routes/avaliacao-experiencia.route");
 var loja_route_1 = require("./routes/loja.route");
 var colaborador_route_1 = require("./routes/colaborador.route");
+var error_middleware_1 = __importDefault(require("./middleware/error.middleware"));
+var log_erros_middleware_1 = __importDefault(require("./middleware/log-erros.middleware"));
 var getServer = function () { return __awaiter(void 0, void 0, void 0, function () {
     var app, server;
     return __generator(this, function (_a) {
@@ -63,9 +65,15 @@ var getServer = function () { return __awaiter(void 0, void 0, void 0, function 
                 app.use(loja_route_1.lojaRouter);
                 app.use(transacao_experiencia_route_1.transacaoExperienciaRouter);
                 app.use(avaliacao_experiencia_route_1.avaliacaoExperienciaRouter);
+                app.use(error_middleware_1.default);
+                app.use(log_erros_middleware_1.default);
                 return [4 /*yield*/, app.listen(3000)];
             case 2:
                 server = _a.sent();
+                server.on('error', function (error) {
+                    console.log("################");
+                    console.error(error);
+                });
                 console.log('Listening at PORT ', 3000);
                 return [2 /*return*/, server];
         }

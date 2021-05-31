@@ -26,6 +26,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/Loja"
+        "400":
+          description: Loja indefinida.
         "500":
           description: Erro indefinido.
   /lojas:

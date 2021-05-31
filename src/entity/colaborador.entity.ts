@@ -23,7 +23,7 @@ export class Colaborador extends BaseEntity {
     transacaoExperiencia: TransacaoExperiencia[];
 
     static async build(data: any): Promise<Colaborador> {
-        let colaborador = new Colaborador();
+        const colaborador = new Colaborador();
         colaborador.nome = data.nome;
         if (data.ativo != undefined && data.ativo != null) colaborador.ativo = !!data.ativo;
         return colaborador;

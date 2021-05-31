@@ -1,4 +1,4 @@
-import { HttpError } from "../errors/http-error";
+import { BadRequestError } from "../errors/bad-request.error";
 
 /** Objeto de transferência de dados de paginação. */
 export class ResultSetDTO<Type> {
@@ -18,7 +18,7 @@ export class ResultSetDTO<Type> {
     list: Type[] = [];
 
     public static build<T>(data: { page: number, pageSize: number, order?: any }): ResultSetDTO<T> {
-        let resultSetDTO = new ResultSetDTO<T>();
+        const resultSetDTO = new ResultSetDTO<T>();
         resultSetDTO.order = data.order;
         resultSetDTO.page = Math.max(1, data.page || 1);
         resultSetDTO.pageSize = Math.max(1, Math.min(data.pageSize || 10, 100));
@@ -26,20 +26,25 @@ export class ResultSetDTO<Type> {
         return resultSetDTO;
     }
 
+    /**
+     * @param query dados do corpo da requisição http a serem convertidos em paginação.     
+     * @returns ResultSet de paginação.
+     */
     public static queryParamsToPaginationDTO<T>(query: any): ResultSetDTO<T> {
-        let page = query.page ? Number(query.page) : 1;        
-        let pageSize = query.pageSize ? Number(query.pageSize) : 10;
-        let orderBy: string = query.orderBy;
-        let orderDirection: 'ASC' | 'DESC' = query.orderDirection;
-        let order: any = {};
+        const page = query.page ? Number(query.page) : 1;
+        const pageSize = query.pageSize ? Number(query.pageSize) : 10;
+        const orderBy: string = query.orderBy;
+        const orderDirection: 'ASC' | 'DESC' = query.orderDirection;
+        const order: any = {};
         if (orderBy) {
-            if (!['ASC', 'DESC', '', undefined].includes(orderDirection)) {
-                throw new HttpError('Sentido de ordenação inválido', 400);
-            }
-            order = { [orderBy]: orderDirection };
-        } else if (orderDirection) {
-            throw new HttpError('Campo de ordenação inválido', 400);
-        }
+            // if (!['ASC', 'DESC', '', undefined].includes(orderDirection)) {
+            //     throw new BadRequestError('Sentido de ordenação inválido');
+            // }
+            order.orderBy = orderDirection;
+        } 
+        // else if (orderDirection) {
+        //     throw new BadRequestError('Campo de ordenação inválido');
+        // }
         return ResultSetDTO.build<T>({
             page,
             pageSize: Number(pageSize),

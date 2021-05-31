@@ -41,43 +41,36 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.avaliacaoExperienciaRouter = void 0;
 var express_1 = __importDefault(require("express"));
-var http_error_1 = require("../errors/http-error");
 var paginationDTO_1 = require("../dto/paginationDTO");
-var avaliacao_experiencia_1 = require("../entity/avaliacao-experiencia");
+var bad_request_error_1 = require("../errors/bad-request.error");
+var avaliacao_experiencia_entity_1 = require("../entity/avaliacao-experiencia.entity");
 var avaliacaoExperienciaRouter = express_1.default.Router();
 exports.avaliacaoExperienciaRouter = avaliacaoExperienciaRouter;
-avaliacaoExperienciaRouter.post('/avaliacao-experiencia', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var avaliacaoExperiencia, error_1;
+avaliacaoExperienciaRouter.post('/avaliacao-experiencia', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var avaliacaoExperiencia;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
-                avaliacaoExperiencia = void 0;
                 if (req.body.id)
-                    throw new http_error_1.HttpError('A avaliação de experiência não deve ser especificada', 400);
-                return [4 /*yield*/, avaliacao_experiencia_1.AvaliacaoExperiencia.build(req.body)];
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError('A avaliação de experiência não deve ser especificada'))];
+                return [4 /*yield*/, avaliacao_experiencia_entity_1.AvaliacaoExperiencia.build(req.body)];
             case 1:
                 avaliacaoExperiencia = _a.sent();
-                return [4 /*yield*/, avaliacaoExperiencia.save({ reload: true })];
-            case 2:
-                _a.sent();
-                return [2 /*return*/, res.send(avaliacaoExperiencia)];
-            case 3:
-                error_1 = _a.sent();
-                console.error(error_1.message);
-                return [2 /*return*/, res.status(error_1['status'] || 500).send(error_1.message)];
-            case 4: return [2 /*return*/];
+                avaliacaoExperiencia
+                    .save({ reload: true })
+                    .then(function (entity) { return res.send(entity); })
+                    .catch(next);
+                return [2 /*return*/];
         }
     });
 }); });
 avaliacaoExperienciaRouter.get('/avaliacoes-experiencias', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var resultSet, avaliacoesExperiencias, error_2;
+    var resultSet, avaliacoesExperiencias;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
                 resultSet = paginationDTO_1.ResultSetDTO.queryParamsToPaginationDTO(req.query);
-                return [4 /*yield*/, avaliacao_experiencia_1.AvaliacaoExperiencia.findAndCount({
+                return [4 /*yield*/, avaliacao_experiencia_entity_1.AvaliacaoExperiencia.findAndCount({
                         take: resultSet.pageSize,
                         skip: resultSet.offset,
                         order: resultSet.order
@@ -86,12 +79,8 @@ avaliacaoExperienciaRouter.get('/avaliacoes-experiencias', function (req, res) {
                 avaliacoesExperiencias = _a.sent();
                 resultSet.list = avaliacoesExperiencias.map(function (avaliacaoExperiencia) { return avaliacaoExperiencia; })[0];
                 resultSet.total = avaliacoesExperiencias[1];
-                return [2 /*return*/, res.send(resultSet)];
-            case 2:
-                error_2 = _a.sent();
-                console.error(error_2.message);
-                return [2 /*return*/, res.status(error_2['status'] || 500).send(error_2.message)];
-            case 3: return [2 /*return*/];
+                res.send(resultSet);
+                return [2 /*return*/];
         }
     });
 }); });

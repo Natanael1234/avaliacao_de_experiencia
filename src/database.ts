@@ -22,9 +22,9 @@ export class Database {
             console.log('Recriando a base de dados...');
             await this.connection.dropDatabase();
             await this.connection.synchronize();
-            console.log('Base de dados Recriada.');            
+            console.log('Base de dados Recriada.');
         } catch (error) {
-            console.error('Falha ao recriar base de dados.');            
+            console.error('Falha ao recriar base de dados.');
             throw error;
         }
     }

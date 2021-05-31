@@ -41,71 +41,60 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.colaboradorRouter = void 0;
 var express_1 = __importDefault(require("express"));
-var http_error_1 = require("../errors/http-error");
 var paginationDTO_1 = require("../dto/paginationDTO");
 var colaborador_entity_1 = require("../entity/colaborador.entity");
+var bad_request_error_1 = require("../errors/bad-request.error");
+var not_found_error_1 = require("../errors/not-found.error");
 var colaboradorRouter = express_1.default.Router();
 exports.colaboradorRouter = colaboradorRouter;
-colaboradorRouter.post('/colaborador', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var colaborador, error_1;
+colaboradorRouter.post('/colaborador', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var colaborador;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
-                colaborador = void 0;
                 if (req.body.id)
-                    throw new http_error_1.HttpError('Colaborador não deve ser especificado', 400);
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError('Colaborador não deve ser especificado'))];
                 return [4 /*yield*/, colaborador_entity_1.Colaborador.build(req.body)];
             case 1:
                 colaborador = _a.sent();
-                return [4 /*yield*/, colaborador.save()];
-            case 2:
-                _a.sent();
-                return [2 /*return*/, res.send(colaborador)];
-            case 3:
-                error_1 = _a.sent();
-                console.error(error_1.message);
-                return [2 /*return*/, res.status(error_1['status'] || 500).send(error_1.message)];
-            case 4: return [2 /*return*/];
+                colaborador
+                    .save()
+                    .then(function (entity) { return res.send(entity); })
+                    .catch(next);
+                return [2 /*return*/];
         }
     });
 }); });
-colaboradorRouter.put('/colaborador', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var colaborador, error_2;
+colaboradorRouter.put('/colaborador', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var colaborador;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
                 if (!req.body.id)
-                    throw new http_error_1.HttpError('Colaborador não especificado', 400);
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError('Colaborador não especificado'))];
                 return [4 /*yield*/, colaborador_entity_1.Colaborador.findOne({ where: { id: req.body.id } })];
             case 1:
                 colaborador = _a.sent();
                 if (!colaborador)
-                    throw new http_error_1.HttpError('Colaborador indefinido', 404);
+                    return [2 /*return*/, next(new not_found_error_1.NotFoundError('Colaborador indefinido'))];
                 if (req.body.nome)
                     colaborador.nome = req.body.nome;
                 if (req.body.ativo != undefined && req.body.ativo != null)
                     colaborador.ativo = !!req.body.ativo;
                 colaborador.updateDate = new Date();
-                return [4 /*yield*/, colaborador.save({ reload: true })];
-            case 2:
-                _a.sent();
-                return [2 /*return*/, res.send(colaborador)];
-            case 3:
-                error_2 = _a.sent();
-                console.error(error_2.message);
-                return [2 /*return*/, res.status(error_2['status'] || 500).send(error_2.message)];
-            case 4: return [2 /*return*/];
+                colaborador
+                    .save()
+                    .then(function (entity) { return res.send(entity); })
+                    .catch(next);
+                return [2 /*return*/];
         }
     });
 }); });
 colaboradorRouter.get('/colaboradores', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var resultSet, colaboradores, error_3;
+    var resultSet, colaboradores;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
                 resultSet = paginationDTO_1.ResultSetDTO.queryParamsToPaginationDTO(req.query);
                 return [4 /*yield*/, colaborador_entity_1.Colaborador.findAndCount({
                         take: resultSet.pageSize,
@@ -116,40 +105,33 @@ colaboradorRouter.get('/colaboradores', function (req, res) { return __awaiter(v
                 colaboradores = _a.sent();
                 resultSet.list = colaboradores.map(function (colaborador) { return colaborador; })[0];
                 resultSet.total = colaboradores[1];
-                return [2 /*return*/, res.send(resultSet)];
-            case 2:
-                error_3 = _a.sent();
-                console.error(error_3.message);
-                return [2 /*return*/, res.status(error_3['status'] || 500).send(error_3.message)];
-            case 3: return [2 /*return*/];
+                res.send(resultSet);
+                return [2 /*return*/];
         }
     });
 }); });
-colaboradorRouter.delete('/colaborador/:colaboradorId', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var colaboradorId, colaborador, error_4;
+colaboradorRouter.delete('/colaborador/:colaboradorId', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var colaboradorId, colaborador;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
                 if (!req.params.colaboradorId)
-                    throw new http_error_1.HttpError('Colaborador indefinido', 400);
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError('Colaborador indefinido'))];
                 colaboradorId = Number(req.params.colaboradorId);
                 return [4 /*yield*/, colaborador_entity_1.Colaborador.findOne({ where: { id: colaboradorId } })];
             case 1:
                 colaborador = _a.sent();
                 if (!colaborador)
-                    throw new http_error_1.HttpError('Colaborador não encontrado', 404);
+                    return [2 /*return*/, next(new not_found_error_1.NotFoundError('Colaborador não encontrado'))];
                 colaborador.ativo = false;
                 colaborador.updateDate = new Date();
-                return [4 /*yield*/, colaborador.save({ reload: true })];
+                return [4 /*yield*/, colaborador
+                        .save()
+                        .then(function (entity) { return res.send(entity); })
+                        .catch(next)];
             case 2:
                 _a.sent();
-                return [2 /*return*/, res.send(colaborador)];
-            case 3:
-                error_4 = _a.sent();
-                console.error(error_4.message);
-                return [2 /*return*/, res.status(error_4['status'] || 500).send(error_4.message)];
-            case 4: return [2 /*return*/];
+                return [2 /*return*/];
         }
     });
 }); });

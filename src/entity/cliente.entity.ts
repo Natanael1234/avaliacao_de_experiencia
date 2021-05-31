@@ -34,7 +34,7 @@ export class Cliente extends BaseEntity {
     transacaoExperiencia: TransacaoExperiencia[];
 
     static async build(data: any): Promise<Cliente> {
-        let cliente = new Cliente();
+        const cliente = new Cliente();
         cliente.nome = data.nome;
         cliente.email = data.email;
         cliente.cpf = data.cpf;

@@ -41,79 +41,68 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.lojaRouter = void 0;
 var express_1 = __importDefault(require("express"));
-var http_error_1 = require("../errors/http-error");
 var paginationDTO_1 = require("../dto/paginationDTO");
 var loja_entity_1 = require("../entity/loja.entity");
+var bad_request_error_1 = require("../errors/bad-request.error");
+var not_found_error_1 = require("../errors/not-found.error");
 var lojaRouter = express_1.default.Router();
 exports.lojaRouter = lojaRouter;
-lojaRouter.post('/loja', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var loja, error_1;
+lojaRouter.post('/loja', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var loja;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
-                loja = void 0;
                 if (req.body.id)
-                    throw new http_error_1.HttpError('Loja não deve ser especificada', 400);
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError('Loja não deve ser especificada'))];
                 return [4 /*yield*/, loja_entity_1.Loja.build(req.body)];
             case 1:
                 loja = _a.sent();
-                return [4 /*yield*/, loja.save()];
-            case 2:
-                _a.sent();
-                return [2 /*return*/, res.send(loja)];
-            case 3:
-                error_1 = _a.sent();
-                console.error(error_1.message);
-                return [2 /*return*/, res.status(error_1['status'] || 500).send(error_1.message)];
-            case 4: return [2 /*return*/];
+                loja
+                    .save()
+                    .then(function (entity) { return res.send(entity); })
+                    .catch(next);
+                return [2 /*return*/];
         }
     });
 }); });
-lojaRouter.put('/loja', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var loja, error_2;
+lojaRouter.put('/loja', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var loja;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
                 if (!req.body.id)
-                    throw new http_error_1.HttpError('Loja não especificada', 400);
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError('Loja indefinida'))];
                 return [4 /*yield*/, loja_entity_1.Loja.findOne({ where: { id: req.body.id } })];
             case 1:
                 loja = _a.sent();
                 if (!loja)
-                    throw new http_error_1.HttpError('Loja indefinida', 404);
+                    return [2 /*return*/, next(new not_found_error_1.NotFoundError('Loja não encontrada'))];
                 if (req.body.nome)
                     loja.nome = req.body.nome;
                 if (req.body.ativa != undefined && req.body.ativa != null)
                     loja.ativa = !!req.body.ativa;
                 loja.updateDate = new Date();
-                return [4 /*yield*/, loja.save({ reload: true })];
-            case 2:
-                _a.sent();
-                return [2 /*return*/, res.send(loja)];
-            case 3:
-                error_2 = _a.sent();
-                console.error(error_2.message);
-                return [2 /*return*/, res.status(error_2['status'] || 500).send(error_2.message)];
-            case 4: return [2 /*return*/];
+                loja
+                    .save()
+                    .then(function (entity) { return res.send(entity); })
+                    .catch(next);
+                return [2 /*return*/];
         }
     });
 }); });
-lojaRouter.get('/lojas', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var resultSet, where, lojas, error_3;
+lojaRouter.get('/lojas', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var where, resultSet, lojas;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                resultSet = paginationDTO_1.ResultSetDTO.queryParamsToPaginationDTO(req.query);
                 where = {};
                 if (req.query.ativa == 'true')
                     where.ativa = true;
                 else if (req.query.ativa == 'false')
                     where.ativa = false;
                 else if (req.query.ativa != undefined)
-                    throw new http_error_1.HttpError('Parâmetro inválido', 400);
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError('Parâmetro inválido'))];
+                resultSet = paginationDTO_1.ResultSetDTO.queryParamsToPaginationDTO(req.query);
                 return [4 /*yield*/, loja_entity_1.Loja.findAndCount({
                         take: resultSet.pageSize,
                         skip: resultSet.offset,
@@ -124,40 +113,31 @@ lojaRouter.get('/lojas', function (req, res) { return __awaiter(void 0, void 0, 
                 lojas = _a.sent();
                 resultSet.list = lojas.map(function (loja) { return loja; })[0];
                 resultSet.total = lojas[1];
-                return [2 /*return*/, res.send(resultSet)];
-            case 2:
-                error_3 = _a.sent();
-                console.error(error_3.message);
-                return [2 /*return*/, res.status(error_3['status'] || 500).send(error_3.message)];
-            case 3: return [2 /*return*/];
+                res.send(resultSet);
+                return [2 /*return*/];
         }
     });
 }); });
-lojaRouter.delete('/loja/:lojaId', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var lojaId, loja, error_4;
+lojaRouter.delete('/loja/:lojaId', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var lojaId, loja;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
                 if (!req.params.lojaId)
-                    throw new http_error_1.HttpError('Loja indefinida', 400);
+                    return [2 /*return*/, next(new bad_request_error_1.BadRequestError('Loja indefinida'))];
                 lojaId = Number(req.params.lojaId);
                 return [4 /*yield*/, loja_entity_1.Loja.findOne({ where: { id: lojaId } })];
             case 1:
                 loja = _a.sent();
                 if (!loja)
-                    throw new http_error_1.HttpError('Loja não encontrada', 404);
+                    return [2 /*return*/, next(new not_found_error_1.NotFoundError('Loja não encontrada'))];
                 loja.updateDate = new Date();
                 loja.ativa = false;
-                return [4 /*yield*/, loja.save({ reload: true })];
-            case 2:
-                _a.sent();
-                return [2 /*return*/, res.send(loja)];
-            case 3:
-                error_4 = _a.sent();
-                console.error(error_4.message);
-                return [2 /*return*/, res.status(error_4['status'] || 500).send(error_4.message)];
-            case 4: return [2 /*return*/];
+                loja
+                    .save()
+                    .then(function (entity) { return res.send(entity); })
+                    .catch(next);
+                return [2 /*return*/];
         }
     });
 }); });
