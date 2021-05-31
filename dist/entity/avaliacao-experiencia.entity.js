@@ -57,76 +57,55 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TransacaoExperiencia = void 0;
+exports.AvaliacaoExperiencia = void 0;
 var typeorm_1 = require("typeorm");
-var avaliacao_experiencia_entity_1 = require("./avaliacao-experiencia.entity");
-var cliente_entity_1 = require("./cliente.entity");
-var colaborador_entity_1 = require("./colaborador.entity");
-var loja_entity_1 = require("./loja.entity");
-var TransacaoExperiencia = /** @class */ (function (_super) {
-    __extends(TransacaoExperiencia, _super);
-    function TransacaoExperiencia() {
+var transacao_experiencia_entity_1 = require("./transacao-experiencia.entity");
+var AvaliacaoExperiencia = /** @class */ (function (_super) {
+    __extends(AvaliacaoExperiencia, _super);
+    function AvaliacaoExperiencia() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    TransacaoExperiencia_1 = TransacaoExperiencia;
-    TransacaoExperiencia.build = function (data) {
+    AvaliacaoExperiencia_1 = AvaliacaoExperiencia;
+    AvaliacaoExperiencia.build = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var transacaoExperiencia;
+            var avaliacaoExperiencia;
             return __generator(this, function (_a) {
-                transacaoExperiencia = new TransacaoExperiencia_1();
-                transacaoExperiencia.valor = data.valor;
-                if (data.data)
-                    transacaoExperiencia.data = new Date(data.data);
-                if (data.clienteId)
-                    transacaoExperiencia.clienteId = data.clienteId;
-                if (data.lojaId)
-                    transacaoExperiencia.lojaId = data.lojaId;
-                if (data.colaboradorId)
-                    transacaoExperiencia.colaboradorId = data.colaboradorId;
-                return [2 /*return*/, transacaoExperiencia];
+                avaliacaoExperiencia = new AvaliacaoExperiencia_1();
+                avaliacaoExperiencia.nota = data.nota;
+                avaliacaoExperiencia.comentario = data.comentario;
+                if (data.transacaoExperienciaId) {
+                    avaliacaoExperiencia.transacaoExperienciaId = data.transacaoExperienciaId;
+                }
+                return [2 /*return*/, avaliacaoExperiencia];
             });
         });
     };
-    var TransacaoExperiencia_1;
+    var AvaliacaoExperiencia_1;
     __decorate([
         typeorm_1.PrimaryGeneratedColumn()
-    ], TransacaoExperiencia.prototype, "id", void 0);
+    ], AvaliacaoExperiencia.prototype, "id", void 0);
     __decorate([
         typeorm_1.Column({ nullable: false, type: "double" })
-    ], TransacaoExperiencia.prototype, "valor", void 0);
+    ], AvaliacaoExperiencia.prototype, "nota", void 0);
     __decorate([
-        typeorm_1.Column({ nullable: false, type: "timestamp" })
-    ], TransacaoExperiencia.prototype, "data", void 0);
+        typeorm_1.Column({ nullable: false, unique: true, type: "varchar" })
+    ], AvaliacaoExperiencia.prototype, "comentario", void 0);
     __decorate([
         typeorm_1.CreateDateColumn({ type: "timestamp" })
-    ], TransacaoExperiencia.prototype, "creationDate", void 0);
+    ], AvaliacaoExperiencia.prototype, "creationDate", void 0);
     __decorate([
         typeorm_1.UpdateDateColumn({ type: "timestamp" })
-    ], TransacaoExperiencia.prototype, "updateDate", void 0);
+    ], AvaliacaoExperiencia.prototype, "updateDate", void 0);
     __decorate([
-        typeorm_1.ManyToOne(function () { return cliente_entity_1.Cliente; }, function (cliente) { return cliente.transacaoExperiencia; })
-    ], TransacaoExperiencia.prototype, "cliente", void 0);
-    __decorate([
-        typeorm_1.Column({ type: 'int', nullable: true })
-    ], TransacaoExperiencia.prototype, "clienteId", void 0);
-    __decorate([
-        typeorm_1.ManyToOne(function () { return loja_entity_1.Loja; }, function (loja) { return loja.transacaoExperiencia; })
-    ], TransacaoExperiencia.prototype, "loja", void 0);
+        typeorm_1.OneToOne(function () { return transacao_experiencia_entity_1.TransacaoExperiencia; }, function (transacaoExperiencia) { return transacaoExperiencia.avaliacaoExperiencia; }),
+        typeorm_1.JoinColumn()
+    ], AvaliacaoExperiencia.prototype, "transacaoExperiencia", void 0);
     __decorate([
         typeorm_1.Column({ type: 'int', nullable: true })
-    ], TransacaoExperiencia.prototype, "lojaId", void 0);
-    __decorate([
-        typeorm_1.ManyToOne(function () { return colaborador_entity_1.Colaborador; }, function (colaborador) { return colaborador.transacaoExperiencia; })
-    ], TransacaoExperiencia.prototype, "colaborador", void 0);
-    __decorate([
-        typeorm_1.Column({ type: 'int', nullable: true })
-    ], TransacaoExperiencia.prototype, "colaboradorId", void 0);
-    __decorate([
-        typeorm_1.OneToOne(function () { return avaliacao_experiencia_entity_1.AvaliacaoExperiencia; }, function (avaliacaoExperiencia) { return avaliacaoExperiencia.transacaoExperiencia; })
-    ], TransacaoExperiencia.prototype, "avaliacaoExperiencia", void 0);
-    TransacaoExperiencia = TransacaoExperiencia_1 = __decorate([
+    ], AvaliacaoExperiencia.prototype, "transacaoExperienciaId", void 0);
+    AvaliacaoExperiencia = AvaliacaoExperiencia_1 = __decorate([
         typeorm_1.Entity()
-    ], TransacaoExperiencia);
-    return TransacaoExperiencia;
+    ], AvaliacaoExperiencia);
+    return AvaliacaoExperiencia;
 }(typeorm_1.BaseEntity));
-exports.TransacaoExperiencia = TransacaoExperiencia;
+exports.AvaliacaoExperiencia = AvaliacaoExperiencia;

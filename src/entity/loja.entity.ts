@@ -23,7 +23,7 @@ export class Loja extends BaseEntity {
     transacaoExperiencia: TransacaoExperiencia[];
 
     static async build(data: any): Promise<Loja> {
-        let loja = new Loja();
+        const loja = new Loja();
         loja.nome = data.nome;
         if (data.ativa != undefined && data.ativa != null) loja.ativa = !!data.ativa;
         return loja;

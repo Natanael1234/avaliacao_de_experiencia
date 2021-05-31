@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import express from 'express';
+import express, { NextFunction } from 'express';
 import { Database } from "./database";
 import { clienteRouter } from "./routes/cliente.route";
 import { Server } from "http";
@@ -7,6 +7,8 @@ import { transacaoExperienciaRouter } from "./routes/transacao-experiencia.route
 import { avaliacaoExperienciaRouter } from "./routes/avaliacao-experiencia.route";
 import { lojaRouter } from "./routes/loja.route";
 import { colaboradorRouter } from "./routes/colaborador.route";
+import errorMiddleware from "./middleware/error.middleware";
+import logErrorMiddleware from "./middleware/log-erros.middleware";
 
 const getServer = async () => {
     const app = express();
@@ -17,7 +19,13 @@ const getServer = async () => {
     app.use(lojaRouter);
     app.use(transacaoExperienciaRouter);
     app.use(avaliacaoExperienciaRouter);
-    let server = await app.listen(3000);
+    app.use(errorMiddleware);
+    app.use(logErrorMiddleware);
+    const server = await app.listen(3000);
+    server.on('error', (error)=>{
+        console.log("################")
+        console.error(error)
+    })
     console.log('Listening at PORT ', 3000);
     return server;
 }

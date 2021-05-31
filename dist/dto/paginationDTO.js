@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResultSetDTO = void 0;
-var http_error_1 = require("../errors/http-error");
 /** Objeto de transferência de dados de paginação. */
 var ResultSetDTO = /** @class */ (function () {
     function ResultSetDTO() {
@@ -20,22 +19,25 @@ var ResultSetDTO = /** @class */ (function () {
         resultSetDTO.offset = (resultSetDTO.page - 1) * resultSetDTO.pageSize;
         return resultSetDTO;
     };
+    /**
+     * @param query dados do corpo da requisição http a serem convertidos em paginação.
+     * @returns ResultSet de paginação.
+     */
     ResultSetDTO.queryParamsToPaginationDTO = function (query) {
-        var _a;
         var page = query.page ? Number(query.page) : 1;
         var pageSize = query.pageSize ? Number(query.pageSize) : 10;
         var orderBy = query.orderBy;
         var orderDirection = query.orderDirection;
         var order = {};
         if (orderBy) {
-            if (!['ASC', 'DESC', '', undefined].includes(orderDirection)) {
-                throw new http_error_1.HttpError('Sentido de ordenação inválido', 400);
-            }
-            order = (_a = {}, _a[orderBy] = orderDirection, _a);
+            // if (!['ASC', 'DESC', '', undefined].includes(orderDirection)) {
+            //     throw new BadRequestError('Sentido de ordenação inválido');
+            // }
+            order.orderBy = orderDirection;
         }
-        else if (orderDirection) {
-            throw new http_error_1.HttpError('Campo de ordenação inválido', 400);
-        }
+        // else if (orderDirection) {
+        //     throw new BadRequestError('Campo de ordenação inválido');
+        // }
         return ResultSetDTO.build({
             page: page,
             pageSize: Number(pageSize),

@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, ManyToOne, OneToOne } from "typeorm";
-import { HttpError } from "../errors/http-error";
-import { AvaliacaoExperiencia } from "./avaliacao-experiencia";
+import { AvaliacaoExperiencia } from "./avaliacao-experiencia.entity";
 import { Cliente } from "./cliente.entity";
 import { Colaborador } from "./colaborador.entity";
 import { Loja } from "./loja.entity";
@@ -28,56 +27,29 @@ export class TransacaoExperiencia extends BaseEntity {
 
     @Column({ type: 'int', nullable: true })
     clienteId?: number | null
-    
+
     @ManyToOne(() => Loja, loja => loja.transacaoExperiencia)
     loja: Loja;
 
     @Column({ type: 'int', nullable: true })
     lojaId?: number | null
-    
+
     @ManyToOne(() => Colaborador, colaborador => colaborador.transacaoExperiencia)
     colaborador: Colaborador;
 
     @Column({ type: 'int', nullable: true })
     colaboradorId?: number | null
 
-    @OneToOne(() => AvaliacaoExperiencia, avaliacaoExperiencia => avaliacaoExperiencia.transacaoExperiencia) 
+    @OneToOne(() => AvaliacaoExperiencia, avaliacaoExperiencia => avaliacaoExperiencia.transacaoExperiencia)
     avaliacaoExperiencia: AvaliacaoExperiencia;
 
-    static async getCliente(clienteId: any) {
-        if (!clienteId) throw new HttpError('Cliente indefinido', 400);
-        let cliente = await Cliente.findOne({ where: { id: clienteId } });        
-        if (!cliente) throw new HttpError('Cliente inexistente', 404);
-        return cliente;
-    }
-
-    static async getLoja(lojaId: any) {
-        if (!lojaId) throw new HttpError('Loja indefinida', 400);
-        let loja = await Loja.findOne({ where: { id: lojaId } });        
-        if (!loja) throw new HttpError('Loja não inexistente', 404);
-        return loja;
-    }
-
-    static async getColaborador(colaboradorId: any) {
-        if (!colaboradorId) throw new HttpError('Colaborador indefinido', 400);
-        let colaborador = await Colaborador.findOne({ where: { id: colaboradorId } });        
-        if (!colaborador) throw new HttpError('Colaborador não inexistente', 404);
-        return colaborador;
-    }
-
     static async build(data: any): Promise<TransacaoExperiencia> {
-        let transacaoExperiencia = new TransacaoExperiencia();
+        const transacaoExperiencia = new TransacaoExperiencia();
         transacaoExperiencia.valor = data.valor;
         if (data.data) transacaoExperiencia.data = new Date(data.data);
-        if (data.clienteId) {
-            transacaoExperiencia.cliente = await TransacaoExperiencia.getCliente(data.clienteId);
-        }
-        if (data.lojaId) {
-            transacaoExperiencia.loja = await TransacaoExperiencia.getLoja(data.lojaId);
-        }
-        if (data.colaboradorId) {
-            transacaoExperiencia.colaborador = await TransacaoExperiencia.getColaborador(data.colaboradorId);
-        }
+        if (data.clienteId) transacaoExperiencia.clienteId = data.clienteId;
+        if (data.lojaId) transacaoExperiencia.lojaId = data.lojaId;
+        if (data.colaboradorId) transacaoExperiencia.colaboradorId = data.colaboradorId;
         return transacaoExperiencia;
     }
 

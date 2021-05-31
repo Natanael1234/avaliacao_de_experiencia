@@ -27,7 +27,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
 
     let dadosAvaliacoesExperiencias: any = [];
     let avaliacoesExperiencias: any = [];
-
+ 
 
     beforeAll(async () => {
         jest.useFakeTimers();
@@ -466,6 +466,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
                 expect(res.body.id).toBeDefined();
                 expect(res.body.nota).toBe(dadosAvaliacoesExperiencias[i].nota);
                 expect(res.body.comentario).toBe(dadosAvaliacoesExperiencias[i].comentario);
+                expect(res.body.transacaoExperienciaId).toBeTruthy();                
                 expect(res.body.transacaoExperienciaId).toBe(dadosAvaliacoesExperiencias[i].transacaoExperienciaId);
                 expect(date.toISOString() < res.body.creationDate).toBeTruthy();
                 avaliacoesExperiencias.push(res.body);
@@ -506,6 +507,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
                 expect(pageConcat[i].id).toBe(avaliacoesExperiencias[i].id);
                 expect(pageConcat[i].nota).toBe(avaliacoesExperiencias[i].nota);
                 expect(pageConcat[i].comentario).toBe(avaliacoesExperiencias[i].comentario);
+                expect(pageConcat[i].transacaoExperienciaId).toBeTruthy();                
                 expect(pageConcat[i].transacaoExperienciaId).toBe(avaliacoesExperiencias[i].transacaoExperienciaId);
             }
         });

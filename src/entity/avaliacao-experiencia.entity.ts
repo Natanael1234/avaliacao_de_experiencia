@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, OneToMany, OneToOne, JoinColumn } from "typeorm";
-import { HttpError } from "../errors/http-error";
-import { transacaoExperienciaRouter } from "../routes/transacao-experiencia.route";
+import { ConflictError } from "../errors/conflict.error";
+import { NotFoundError } from "../errors/not-found.error";
 
 import { TransacaoExperiencia } from "./transacao-experiencia.entity";
 
@@ -30,15 +30,11 @@ export class AvaliacaoExperiencia extends BaseEntity {
     transacaoExperienciaId?: number | null;
 
     static async build(data: any): Promise<AvaliacaoExperiencia> {
-        let avaliacaoExperiencia = new AvaliacaoExperiencia();
+        const avaliacaoExperiencia = new AvaliacaoExperiencia();
         avaliacaoExperiencia.nota = data.nota;
         avaliacaoExperiencia.comentario = data.comentario;
         if (data.transacaoExperienciaId) {
-            let avaliacaoExperienciaExistente = await AvaliacaoExperiencia.findOne({ where: { transacaoExperienciaId: data.transacaoExperienciaId } })
-            if (avaliacaoExperienciaExistente) throw new HttpError('Avaliação de experiência já cadastrada', 409);
-            let transacaoExperiencia = await TransacaoExperiencia.findOne({ where: { id: data.transacaoExperienciaId } });
-            if (!transacaoExperiencia) throw new HttpError('Transação/Experiência não encontrada', 404);
-            avaliacaoExperiencia.transacaoExperiencia = transacaoExperiencia;
+            avaliacaoExperiencia.transacaoExperienciaId = data.transacaoExperienciaId;
         }
         return avaliacaoExperiencia;
     }
