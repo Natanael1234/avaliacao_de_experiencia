@@ -6,10 +6,14 @@ import { BadRequestError } from "../errors/bad-request.error";
 import { NotFoundError } from "../errors/not-found.error";
 const colaboradorRouter = express.Router();
 
-colaboradorRouter.post('/colaborador', async (req: Request, res: Response, next: NextFunction) => {    
+colaboradorRouter.post('/colaborador', async (req: Request, res: Response, next: NextFunction) => {
     if (req.body.id) return next(new BadRequestError('Colaborador não deve ser especificado'));
-    const colaborador = await Colaborador.build(req.body);
-    colaborador
+    new Colaborador()
+        .setData({ 
+            ...req.body, 
+            ativo: req.body.ativo == false ? false : true,
+            id: undefined 
+        })
         .save()
         .then((entity) => res.send(entity))
         .catch(next);
@@ -17,12 +21,11 @@ colaboradorRouter.post('/colaborador', async (req: Request, res: Response, next:
 
 colaboradorRouter.put('/colaborador', async (req: Request, res: Response, next: NextFunction) => {
     if (!req.body.id) return next(new BadRequestError('Colaborador não especificado'));
-    const colaborador = await Colaborador.findOne({ where: { id: req.body.id } });
-    if (!colaborador) return next(new NotFoundError('Colaborador indefinido'));
-    if (req.body.nome) colaborador.nome = req.body.nome;
-    if (req.body.ativo != undefined && req.body.ativo != null) colaborador.ativo = !!req.body.ativo;
-    colaborador.updateDate = new Date();
-    colaborador
+    delete req.body.ativo;
+    let colaborador = await Colaborador.findOne({ where: { id: req.body.id } });
+    if (!colaborador) return next(new NotFoundError('Colaborador não encontrado.'));
+    await colaborador
+        .setData(req.body)
         .save()
         .then((entity) => res.send(entity))
         .catch(next);
@@ -41,14 +44,13 @@ colaboradorRouter.get('/colaboradores', async (req: Request, res: Response) => {
 });
 
 colaboradorRouter.delete('/colaborador/:colaboradorId', async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.params.colaboradorId) return next(new BadRequestError('Colaborador indefinido'));
+    if (!req.params.colaboradorId) return next(new BadRequestError('Colaborador indefinido.'));
     const colaboradorId = Number(req.params.colaboradorId);
     const colaborador = await Colaborador.findOne({ where: { id: colaboradorId } });
-    if (!colaborador) return next(new NotFoundError('Colaborador não encontrado'));
-    colaborador.ativo = false;
-    colaborador.updateDate = new Date();
+    if (!colaborador) return next(new NotFoundError('Colaborador não encontrado.'));
     await colaborador
-        .save()
+        .setData({ ativo: req.query.ativo == 'true' })
+        .save({reload:true})
         .then((entity) => res.send(entity))
         .catch(next);
 })

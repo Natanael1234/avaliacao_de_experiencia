@@ -9,6 +9,38 @@ import { Colaborador } from "../src/entity/colaborador.entity";
 import { Loja } from "../src/entity/loja.entity";
 import { TransacaoExperiencia } from "../src/entity/transacao-experiencia.entity";
 
+
+function gerarCPF(useMask?: boolean) {
+    function randomiza(n: number) {
+        var ranNum = Math.round(Math.random() * n);
+        return ranNum;
+    }
+
+    function mod(dividendo: number, divisor: number) {
+        return Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));
+    }
+
+    const n = 9;
+    const n1 = randomiza(n);
+    const n2 = randomiza(n);
+    const n3 = randomiza(n);
+    const n4 = randomiza(n);
+    const n5 = randomiza(n);
+    const n6 = randomiza(n);
+    const n7 = randomiza(n);
+    const n8 = randomiza(n);
+    const n9 = randomiza(n);
+    let d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;
+    d1 = 11 - (mod(d1, 11));
+    if (d1 >= 10) d1 = 0;
+    let d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;
+    d2 = 11 - (mod(d2, 11));
+    if (d2 >= 10) d2 = 0;
+
+    if (useMask) return '' + n1 + n2 + n3 + '.' + n4 + n5 + n6 + '.' + n7 + n8 + n9 + '-' + d1 + d2;
+    return '' + n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9 + d1 + d2;
+}
+
 describe('API Avaliação de Experiência de Cliente', () => {
 
     let server: Server;
@@ -27,7 +59,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
 
     let dadosAvaliacoesExperiencias: any = [];
     let avaliacoesExperiencias: any = [];
- 
+
 
     beforeAll(async () => {
         jest.useFakeTimers();
@@ -121,7 +153,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
 
         it('Delete /loja/:lojaId', async () => {
             let date = new Date();
-            let res = await request(await server).delete('/loja/' + lojas[2].id);
+            let res = await request(await server).delete('/loja/' + lojas[2].id).query({ ativa: !lojas[2].ativa });
             expect(res.status).toBe(200);
             let query: any[] = await Loja.find({ where: { updateDate: MoreThan(date) } });
             expect(query.length).toBe(1);
@@ -196,7 +228,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
 
         it('Put /colaborador', async () => {
             let date = new Date();
-            colaboradores[2].nome = 'Colaborador 1 modificado';
+            colaboradores[2].nome = 'Colaborador 3 modificado';
 
             let res = await request(await server).put('/colaborador').send(colaboradores[2]);
             expect(res.status).toBe(200);
@@ -216,12 +248,12 @@ describe('API Avaliação de Experiência de Cliente', () => {
 
         it('Delete /colaborador/:colaboradorId', async () => {
             let date = new Date();
-            let res = await request(await server).delete('/colaborador/' + colaboradores[2].id);
+            let res = await request(await server).delete('/colaborador/' + colaboradores[2].id).query({ ativo: !colaboradores[2].ativo });
             expect(res.status).toBe(200);
             let query: any[] = await Colaborador.find({ where: { updateDate: MoreThan(date) } });
             expect(query.length).toBe(1);
             expect(query[0].id).toBe(colaboradores[2].id);
-            expect(query[0].ativo).toBe(false);
+            expect(query[0].ativo).toBe(!colaboradores[2].ativo);
         });
     });
 
@@ -232,9 +264,9 @@ describe('API Avaliação de Experiência de Cliente', () => {
                 dadosClientes.push(
                     {
                         nome: 'Cliente ' + i,
-                        email: 'cliente' + i + ' @email.com',
+                        email: 'cliente' + i + '@email.com',
                         telefone: '2799669758' + i,
-                        cpf: '6219272609' + i,
+                        cpf: gerarCPF(i % 2 == 0),
                         ativo: i != 2 && i != 7
                     }
                 );
@@ -244,7 +276,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
         it('Post /cliente', async () => {
             for (let i = 0; i < dadosClientes.length; i++) {
                 let date = new Date();
-                let res = await request(await server).post('/cliente').send(dadosClientes[i]);
+                let res = await request(await server).post('/cliente').send(dadosClientes[i]).query({ ativo: false });
                 expect(res.status).toBe(200);
                 expect(res.body.id).toBeDefined();
                 expect(res.body.nome).toBe(dadosClientes[i].nome);
@@ -301,7 +333,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
         it('Put /cliente', async () => {
             let date = new Date();
             clientes[3].nome = 'Cliente 3 modificado';
-            clientes[3].cpf = '07397473473';
+            clientes[3].cpf = gerarCPF();
             clientes[3].telefone = '24989885300';
             clientes[3].email = 'cliente3modificado@email.com';
 
@@ -327,12 +359,12 @@ describe('API Avaliação de Experiência de Cliente', () => {
 
         it('Delete /cliente/:clienteId', async () => {
             let date = new Date();
-            let res = await request(await server).delete('/cliente/' + clientes[3].id);
+            let res = await request(await server).delete('/cliente/' + clientes[3].id).query({ ativo: !clientes[3].ativo });
             expect(res.status).toBe(200);
             let query: any[] = await Cliente.find({ where: { updateDate: MoreThan(date) } });
             expect(query.length).toBe(1);
             expect(query[0].id).toBe(clientes[3].id);
-            expect(query[0].ativo).toBe(false);
+            expect(query[0].ativo).toBe(!clientes[3].ativo);
         });
     });
 
@@ -415,11 +447,11 @@ describe('API Avaliação de Experiência de Cliente', () => {
 
         it('Put /transacao-experiencia', async () => {
             let date = new Date();
-            transacoesExperiencias[3].valor = 10;           
-            transacoesExperiencias[3].lojaId = lojas[0].id; 
-            transacoesExperiencias[3].colaboradorId = lojas[0].id; 
+            transacoesExperiencias[3].valor = 10;
+            transacoesExperiencias[3].lojaId = lojas[0].id;
+            transacoesExperiencias[3].colaboradorId = lojas[0].id;
             transacoesExperiencias[3].data = new Date(2025, 3, 23).toISOString();
-            
+
 
             let res = await request(await server).put('/transacao-experiencia').send(transacoesExperiencias[3]);
 
@@ -427,7 +459,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
             expect(res.body.id).toBeDefined();
             expect(res.body.valor).toBe(transacoesExperiencias[3].valor);
             expect(res.body.data).toBe(transacoesExperiencias[3].data);
-            expect(res.body.clienteId).toBe(transacoesExperiencias[3].clienteId);            
+            expect(res.body.clienteId).toBe(transacoesExperiencias[3].clienteId);
             expect(res.body.lojaId).toBe(transacoesExperiencias[3].lojaId);
             expect(res.body.colaboradorId).toBe(transacoesExperiencias[3].colaboradorId);
             expect(date.toISOString() < res.body.updateDate).toBeTruthy();
@@ -466,7 +498,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
                 expect(res.body.id).toBeDefined();
                 expect(res.body.nota).toBe(dadosAvaliacoesExperiencias[i].nota);
                 expect(res.body.comentario).toBe(dadosAvaliacoesExperiencias[i].comentario);
-                expect(res.body.transacaoExperienciaId).toBeTruthy();                
+                expect(res.body.transacaoExperienciaId).toBeTruthy();
                 expect(res.body.transacaoExperienciaId).toBe(dadosAvaliacoesExperiencias[i].transacaoExperienciaId);
                 expect(date.toISOString() < res.body.creationDate).toBeTruthy();
                 avaliacoesExperiencias.push(res.body);
@@ -507,7 +539,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
                 expect(pageConcat[i].id).toBe(avaliacoesExperiencias[i].id);
                 expect(pageConcat[i].nota).toBe(avaliacoesExperiencias[i].nota);
                 expect(pageConcat[i].comentario).toBe(avaliacoesExperiencias[i].comentario);
-                expect(pageConcat[i].transacaoExperienciaId).toBeTruthy();                
+                expect(pageConcat[i].transacaoExperienciaId).toBeTruthy();
                 expect(pageConcat[i].transacaoExperienciaId).toBe(avaliacoesExperiencias[i].transacaoExperienciaId);
             }
         });
