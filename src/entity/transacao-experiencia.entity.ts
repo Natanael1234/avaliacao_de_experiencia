@@ -65,12 +65,20 @@ export class TransacaoExperiencia extends BaseEntity {
 
     static async build(data: any): Promise<TransacaoExperiencia> {
         const transacaoExperiencia = new TransacaoExperiencia();
-        transacaoExperiencia.valor = data.valor;
-        if (data.data) transacaoExperiencia.data = new Date(data.data);
-        if (data.clienteId) transacaoExperiencia.clienteId = data.clienteId;
-        if (data.lojaId) transacaoExperiencia.lojaId = data.lojaId;
-        if (data.colaboradorId) transacaoExperiencia.colaboradorId = data.colaboradorId;
+        transacaoExperiencia.id = data.id;
         return transacaoExperiencia;
+    }
+
+    setData(data: any) {
+        if (!this.hasId()) {
+            this.id = data.id;
+        }
+        if (data.valor !== undefined) this.valor = data.valor;
+        if (data.data !== undefined) this.data = new Date(data.data);
+        if (data.clienteId !== undefined) this.clienteId = data.clienteId;
+        if (data.lojaId !== undefined) this.lojaId = data.lojaId;
+        if (data.colaboradorId !== undefined) this.colaboradorId = data.colaboradorId;
+        return this;
     }
 
 }

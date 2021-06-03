@@ -1,6 +1,7 @@
 import { IsBoolean, MaxLength, MinLength, Validate } from "class-validator";
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, OneToMany, BeforeInsert, BeforeUpdate } from "typeorm";
 import { TransacaoExperiencia } from "./transacao-experiencia.entity";
+import { AtivoValidator } from "./validators/ativo.validator";
 import { RequiredValidator } from "./validators/required.validator";
 import validateEntity from "./validators/validator";
 
@@ -22,7 +23,7 @@ export class Loja extends BaseEntity {
     @UpdateDateColumn({ type: "timestamp" })
     updateDate: Date;
 
-    @IsBoolean({ message: 'Formato de dados inválido.' })
+    @Validate(AtivoValidator)
     @Column({ type: 'boolean', nullable: false, default: true })
     ativa: boolean;
 
@@ -43,11 +44,14 @@ export class Loja extends BaseEntity {
         await validateEntity(this);
     }
 
-    static async build(data: any): Promise<Loja> {
-        const loja = new Loja();
-        loja.nome = data.nome;
-        if (data.ativa != undefined && data.ativa != null) loja.ativa = !!data.ativa;
-        return loja;
+    setData(data: any) {
+        if (!this.hasId()) {
+            if(data.id) this.id = data.id;
+        }
+        if (data.id !== undefined) this.id = data.id;
+        if (data.nome !== undefined) this.nome = data.nome;
+        if (typeof data.ativa === 'boolean') this.ativa = data.ativa;
+        return this;
     }
 
 }

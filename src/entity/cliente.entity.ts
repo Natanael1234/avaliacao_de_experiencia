@@ -6,6 +6,7 @@ import { FoneValidator } from "./validators/fone.validator";
 import { RequiredValidator } from "./validators/required.validator";
 import validateEntity from "./validators/validator";
 import { EmailValidator } from "./validators/email.validator";
+import { AtivoValidator } from "./validators/ativo.validator";
 
 @Entity()
 export class Cliente extends BaseEntity {
@@ -28,7 +29,7 @@ export class Cliente extends BaseEntity {
     @Validate(FoneValidator)
     @Column({ nullable: false, type: "text" })
     telefone: string;
-    
+
     @Validate(RequiredValidator, { message: 'CPF é obrigatório.' })
     @Validate(CPFValidator)
     @Column({ nullable: false, type: "text" })
@@ -40,7 +41,7 @@ export class Cliente extends BaseEntity {
     @UpdateDateColumn({ type: "timestamp" })
     updateDate: Date;
 
-    @IsBoolean({ message: 'Formato de dados inválido.' })
+    @Validate(AtivoValidator)
     @Column({ type: 'boolean', nullable: false, default: true })
     ativo: boolean;
 
@@ -61,15 +62,16 @@ export class Cliente extends BaseEntity {
         await validateEntity(this);
     }
 
-    static build(data: any): Cliente {
-        const cliente = new Cliente();
-        if (data.id) cliente.id = data.id;
-        if (data.nome !== undefined) cliente.nome = data.nome;
-        if (data.email !== undefined) cliente.email = data.email;
-        if (data.cpf !== undefined) cliente.cpf = data.cpf;
-        if (data.telefone !== undefined) cliente.telefone = data.telefone;
-        if (data.ativo != undefined) cliente.ativo = !!data.ativo;
-        return cliente;
+    setData(data: any) {
+        if (!this.hasId()) {
+            if(data.id) this.id = data.id;
+        }
+        if (data.nome !== undefined) this.nome = data.nome;
+        if (data.email !== undefined) this.email = data.email;
+        if (data.cpf !== undefined) this.cpf = data.cpf;
+        if (data.telefone !== undefined) this.telefone = data.telefone;
+        if (typeof data.ativo === 'boolean') this.ativo = data.ativo;
+        return this;        
     }
 
 

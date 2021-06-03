@@ -153,7 +153,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
 
         it('Delete /loja/:lojaId', async () => {
             let date = new Date();
-            let res = await request(await server).delete('/loja/' + lojas[2].id);
+            let res = await request(await server).delete('/loja/' + lojas[2].id).query({ ativa: !lojas[2].ativa });
             expect(res.status).toBe(200);
             let query: any[] = await Loja.find({ where: { updateDate: MoreThan(date) } });
             expect(query.length).toBe(1);
@@ -228,7 +228,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
 
         it('Put /colaborador', async () => {
             let date = new Date();
-            colaboradores[2].nome = 'Colaborador 1 modificado';
+            colaboradores[2].nome = 'Colaborador 3 modificado';
 
             let res = await request(await server).put('/colaborador').send(colaboradores[2]);
             expect(res.status).toBe(200);
@@ -248,12 +248,12 @@ describe('API Avaliação de Experiência de Cliente', () => {
 
         it('Delete /colaborador/:colaboradorId', async () => {
             let date = new Date();
-            let res = await request(await server).delete('/colaborador/' + colaboradores[2].id);
+            let res = await request(await server).delete('/colaborador/' + colaboradores[2].id).query({ ativo: !colaboradores[2].ativo });
             expect(res.status).toBe(200);
             let query: any[] = await Colaborador.find({ where: { updateDate: MoreThan(date) } });
             expect(query.length).toBe(1);
             expect(query[0].id).toBe(colaboradores[2].id);
-            expect(query[0].ativo).toBe(false);
+            expect(query[0].ativo).toBe(!colaboradores[2].ativo);
         });
     });
 
@@ -276,7 +276,7 @@ describe('API Avaliação de Experiência de Cliente', () => {
         it('Post /cliente', async () => {
             for (let i = 0; i < dadosClientes.length; i++) {
                 let date = new Date();
-                let res = await request(await server).post('/cliente').send(dadosClientes[i]);
+                let res = await request(await server).post('/cliente').send(dadosClientes[i]).query({ ativo: false });
                 expect(res.status).toBe(200);
                 expect(res.body.id).toBeDefined();
                 expect(res.body.nome).toBe(dadosClientes[i].nome);
@@ -359,12 +359,12 @@ describe('API Avaliação de Experiência de Cliente', () => {
 
         it('Delete /cliente/:clienteId', async () => {
             let date = new Date();
-            let res = await request(await server).delete('/cliente/' + clientes[3].id);
+            let res = await request(await server).delete('/cliente/' + clientes[3].id).query({ ativo: !clientes[3].ativo });
             expect(res.status).toBe(200);
             let query: any[] = await Cliente.find({ where: { updateDate: MoreThan(date) } });
             expect(query.length).toBe(1);
             expect(query[0].id).toBe(clientes[3].id);
-            expect(query[0].ativo).toBe(false);
+            expect(query[0].ativo).toBe(!clientes[3].ativo);
         });
     });
 

@@ -1,5 +1,6 @@
 import { IsNumber, MaxLength, MinLength, Validate } from "class-validator";
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, OneToMany, OneToOne, JoinColumn, BeforeInsert, BeforeUpdate } from "typeorm";
+
 import { TransacaoExperiencia } from "./transacao-experiencia.entity";
 import { RequiredValidator } from "./validators/required.validator";
 import validateEntity from "./validators/validator";
@@ -49,14 +50,14 @@ export class AvaliacaoExperiencia extends BaseEntity {
         await validateEntity(this);
     }
 
-    static async build(data: any): Promise<AvaliacaoExperiencia> {
-        const avaliacaoExperiencia = new AvaliacaoExperiencia();
-        avaliacaoExperiencia.nota = data.nota;
-        avaliacaoExperiencia.comentario = data.comentario;
-        if (data.transacaoExperienciaId) {
-            avaliacaoExperiencia.transacaoExperienciaId = data.transacaoExperienciaId;
-        }
-        return avaliacaoExperiencia;
+    setData(data: any) {
+        if (!this.hasId()) {
+            this.id = data.id;
+        }        
+        if (data.nota !== undefined) this.nota = data.nota;
+        if (data.comentario !== undefined) this.comentario = data.comentario;
+        if (data.transacaoExperienciaId !== undefined) this.transacaoExperienciaId = data.transacaoExperienciaId;
+        return this;
     }
 
 }

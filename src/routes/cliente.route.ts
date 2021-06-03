@@ -8,17 +8,24 @@ const clienteRouter = express.Router();
 
 clienteRouter.post('/cliente', (req: Request, res: Response, next: NextFunction) => {
     if (req.body.id) return next(new BadRequestError('Cliente não deve ser especificado.'));
-    const cliente = Cliente.build(req.body);
-    cliente
+    new Cliente()
+        .setData({            
+            ...req.body, 
+            ativo: req.body.ativo == false ? false : true, 
+            id: undefined 
+        })
         .save()
         .then((entity) => res.send(entity))
         .catch(next);
 });
 
-clienteRouter.put('/cliente', (req: Request, res: Response, next: NextFunction) => {
+clienteRouter.put('/cliente', async (req: Request, res: Response, next: NextFunction) => {
     if (!req.body.id) return next(new BadRequestError('Cliente não especificado.'));
-    Cliente
-        .build(req.body)
+    delete req.body.ativo;
+    let cliente = await Cliente.findOne({ where: { id: req.body.id } });
+    if (!cliente) return next(new NotFoundError('Cliente não encontrado.'));
+    await cliente
+        .setData(req.body)
         .save()
         .then((entity) => res.send(entity))
         .catch(next);
@@ -28,7 +35,7 @@ clienteRouter.get('/clientes', async (req: Request, res: Response, next: NextFun
     const where: any = {};
     if (req.query.ativo == 'true') where.ativo = true;
     else if (req.query.ativo == 'false') where.ativo = false;
-    else if (req.query.ativo != undefined) return next(new BadRequestError('Parâmetro inválido'));
+    else if (req.query.ativo != undefined) return next(new BadRequestError('Parâmetro inválido.'));
     const resultSet = ResultSetDTO.queryParamsToPaginationDTO<Cliente>(req.query);
     const clientes = await Cliente.findAndCount({
         take: resultSet.pageSize,
@@ -42,13 +49,12 @@ clienteRouter.get('/clientes', async (req: Request, res: Response, next: NextFun
 });
 
 clienteRouter.delete('/cliente/:clienteId', async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.params.clienteId) return next(new BadRequestError('Cliente indefinido'));
+    if (!req.params.clienteId) return next(new BadRequestError('Cliente indefinido.'));
     const clienteId = Number(req.params.clienteId);
     const cliente = await Cliente.findOne({ where: { id: clienteId } });
-    if (!cliente) return next(new NotFoundError('Cliente não encontrado'));
-    cliente.updateDate = new Date();
-    cliente.ativo = false;
-    cliente
+    if (!cliente) return next(new NotFoundError('Cliente não encontrado.'));
+    await cliente
+        .setData({ ativo: req.query.ativo == 'true' })
         .save()
         .then((entity) => res.send(entity))
         .catch(next);

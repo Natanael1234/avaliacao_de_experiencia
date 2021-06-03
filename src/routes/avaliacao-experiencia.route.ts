@@ -7,15 +7,15 @@ const avaliacaoExperienciaRouter = express.Router();
 
 avaliacaoExperienciaRouter.post('/avaliacao-experiencia', async (req: Request, res: Response, next: NextFunction) => {
     if (req.body.id) return next(new BadRequestError('A avaliação de experiência não deve ser especificada'));
-    const avaliacaoExperiencia = await AvaliacaoExperiencia.build(req.body);
-    avaliacaoExperiencia
-        .save({ reload: true })
+    new AvaliacaoExperiencia()
+        .setData({ ...req.body, id: undefined })
+        .save()
         .then((entity) => res.send(entity))
         .catch(next);
 });
 
 avaliacaoExperienciaRouter.get('/avaliacoes-experiencias', async (req: Request, res: Response) => {
-    const resultSet = ResultSetDTO.queryParamsToPaginationDTO<AvaliacaoExperiencia>(req.query);    
+    const resultSet = ResultSetDTO.queryParamsToPaginationDTO<AvaliacaoExperiencia>(req.query);
     const avaliacoesExperiencias = await AvaliacaoExperiencia.findAndCount({
         take: resultSet.pageSize,
         skip: resultSet.offset,
