@@ -1,7 +1,7 @@
 {
-  "name": "test-nestjs",
+  "name": "avaliacao-de-experiencia",
   "version": "0.0.1",
-  "description": "",
+  "description": "Avaliação de Experiência de Usuário",  
   "author": "",
   "private": true,
   "license": "UNLICENSED",

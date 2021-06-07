@@ -71,3 +71,14 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+
+## Docker
+
+```bash
+# Banco de Dados
+docker-compose -f  docker-compose-database.yml up
+
+# Aplicação + Banco de Dados
+docker-compose -f docker-compose.yml -f  docker-compose-database.yml up
+```

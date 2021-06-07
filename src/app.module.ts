@@ -9,10 +9,11 @@ import { AvaliacoesExperienciasModule } from './avaliacoes-experiencias/avaliaco
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 const runningDockerCompose = process.env.BACKEND_SERVER == 'docker-compose';
+console.log('runningDockerCompose', runningDockerCompose)
 
 let dbLocal:TypeOrmModuleOptions = {
   type: 'mysql',
-  host: 'localhost',
+  host: runningDockerCompose ? "banco_avaliacao_experiencia" : 'localhost',
   port: 3306,
   username: 'root',
   password: 'admin',
@@ -23,7 +24,7 @@ let dbLocal:TypeOrmModuleOptions = {
 
 let dbDocker:TypeOrmModuleOptions = {
   type: 'mysql',
-  host: 'localhost',
+  host: runningDockerCompose ? "banco_avaliacao_experiencia" : 'localhost',
   port: 3308,
   username: 'root',
   password: 'root',
