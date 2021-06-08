@@ -1,7 +1,8 @@
 
 import { IsBoolean, IsDefined, IsEmail, IsOptional, IsPhoneNumber, IsString, MaxLength, MinLength } from "class-validator";
-import { IsCPF } from "../../validators/cpf.validator";
-import { IsUndefined } from "../../validators/undefined.validator";
+import { IsCPF } from "../../../validators/cpf.validator";
+import { IsUndefined } from "../../../validators/undefined.validator";
+
 
 export class CreateClienteDto {
 
@@ -28,8 +29,6 @@ export class CreateClienteDto {
 
     @IsOptional()
     @IsBoolean({ message: "Inválido." })
-    ativo: boolean;
-
-    get 
+    ativo: boolean;    
 
 }

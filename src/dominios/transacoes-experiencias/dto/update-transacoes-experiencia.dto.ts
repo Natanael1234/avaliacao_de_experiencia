@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { IsDateString, IsNumber, IsOptional } from 'class-validator';
-import { IsIntFK } from '../../validators/int-fk.validator';
+import { IsIntFK } from '../../../validators/int-fk.validator';
 import { CreateTransacoesExperienciaDto } from './create-transacoes-experiencia.dto';
 
 export class UpdateTransacoesExperienciaDto extends PartialType(CreateTransacoesExperienciaDto) {

@@ -2,8 +2,8 @@ import { Controller, Post, Body, Param, ParseIntPipe, Put, UseFilters } from '@n
 import { TransacoesExperienciasService } from './transacoes-experiencias.service';
 import { CreateTransacoesExperienciaDto } from './dto/create-transacoes-experiencia.dto';
 import { UpdateTransacoesExperienciaDto } from './dto/update-transacoes-experiencia.dto';
-import { ValidacaoPipe } from '../validators/validation.pipe';
-import { HttpExceptionHandlerFilter } from '../filters/http-exception-handler.filter';
+import { ValidacaoPipe } from '../../validators/validation.pipe';
+import { HttpExceptionHandlerFilter } from '../../filters/http-exception-handler.filter';
 
 @UseFilters(HttpExceptionHandlerFilter)
 @Controller('transacoes-experiencias')

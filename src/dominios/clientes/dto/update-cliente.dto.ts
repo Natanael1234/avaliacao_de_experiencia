@@ -1,7 +1,6 @@
-import { Optional } from '@nestjs/common';
 import { PartialType } from '@nestjs/mapped-types';
-import { IsBoolean, IsEmail, IsOptional, IsPhoneNumber, IsString, MaxLength, MinLength } from 'class-validator';
-import { IsCPF } from '../../validators/cpf.validator';
+import { IsEmail, IsOptional, IsPhoneNumber, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsCPF } from '../../../validators/cpf.validator';
 import { CreateClienteDto } from './create-cliente.dto';
 
 export class UpdateClienteDto extends PartialType(CreateClienteDto) {

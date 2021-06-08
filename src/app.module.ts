@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { LojasModule } from './lojas/lojas.module';
-import { ColaboradoresModule } from './colaboradores/colaboradores.module';
-import { ClientesModule } from './clientes/clientes.module';
-import { TransacoesExperienciasModule } from './transacoes-experiencias/transacoes-experiencias.module';
-import { AvaliacoesExperienciasModule } from './avaliacoes-experiencias/avaliacoes-experiencias.module';
+import { LojasModule } from './dominios/lojas/lojas.module';
+import { ColaboradoresModule } from './dominios/colaboradores/colaboradores.module';
+
+import { TransacoesExperienciasModule } from './dominios/transacoes-experiencias/transacoes-experiencias.module';
+
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ClientesModule } from './dominios/clientes/clientes.module';
+import { AvaliacoesExperienciasModule } from './dominios/avaliacoes-experiencias/avaliacoes-experiencias.module';
 
 const runningDockerCompose = process.env.BACKEND_SERVER == 'docker-compose';
 console.log('runningDockerCompose', runningDockerCompose)

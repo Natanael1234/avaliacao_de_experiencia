@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put, Query, ParseBoolPipe, UseFilters } from '@nestjs/common';
-import { HttpExceptionHandlerFilter } from '../filters/http-exception-handler.filter';
-import { ValidacaoPipe } from '../validators/validation.pipe';
+import { HttpExceptionHandlerFilter } from '../../filters/http-exception-handler.filter';
+import { ValidacaoPipe } from '../../validators/validation.pipe';
+
 import { ClientesService } from './clientes.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';

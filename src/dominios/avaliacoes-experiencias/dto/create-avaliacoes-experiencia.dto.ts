@@ -1,6 +1,6 @@
 import { IsDefined, IsNumber, IsString, Max, MaxLength, Min, MinLength } from "class-validator";
-import { IsIntFK } from "../../validators/int-fk.validator";
-import { IsUndefined } from "../../validators/undefined.validator";
+import { IsIntFK } from "../../../validators/int-fk.validator";
+import { IsUndefined } from "../../../validators/undefined.validator";
 
 export class CreateAvaliacoesExperienciaDto {
 

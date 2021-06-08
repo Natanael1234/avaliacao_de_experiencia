@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Put, UseFilters } from '@nestjs/common';
-import { HttpExceptionHandlerFilter } from '../filters/http-exception-handler.filter';
-import { ValidacaoPipe } from '../validators/validation.pipe';
+import { HttpExceptionHandlerFilter } from '../../filters/http-exception-handler.filter';
+import { ValidacaoPipe } from '../../validators/validation.pipe';
 import { ColaboradoresService } from './colaboradores.service';
 import { CreateColaboradoreDto } from './dto/create-colaboradore.dto';
 import { UpdateColaboradoreDto } from './dto/update-colaboradore.dto';

@@ -1,5 +1,5 @@
 import { IsBoolean, IsDefined, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
-import { IsUndefined } from "../../validators/undefined.validator";
+import { IsUndefined } from "../../../validators/undefined.validator";
 
 export class CreateColaboradoreDto {
 

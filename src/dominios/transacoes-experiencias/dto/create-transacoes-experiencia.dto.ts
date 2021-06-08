@@ -1,6 +1,6 @@
 import { IsDateString, IsDefined, IsNumber, IsOptional, Min } from "class-validator";
-import { IsIntFK } from "../../validators/int-fk.validator";
-import { IsUndefined } from "../../validators/undefined.validator";
+import { IsIntFK } from "../../../validators/int-fk.validator";
+import { IsUndefined } from "../../../validators/undefined.validator";
 
 export class CreateTransacoesExperienciaDto {
 

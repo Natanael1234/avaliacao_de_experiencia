@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put, ParseIntPipe, U
 import { LojasService } from './lojas.service';
 import { CreateLojaDto } from './dto/create-loja.dto';
 import { UpdateLojaDto } from './dto/update-loja.dto';
-import { HttpExceptionHandlerFilter } from '../filters/http-exception-handler.filter';
-import { ValidacaoPipe } from '../validators/validation.pipe';
+import { HttpExceptionHandlerFilter } from '../../filters/http-exception-handler.filter';
+import { ValidacaoPipe } from '../../validators/validation.pipe';
 
 @UseFilters(HttpExceptionHandlerFilter)
 @Controller('lojas')

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, UseFilters } from '@nestjs/common';
-import { HttpExceptionHandlerFilter } from '../filters/http-exception-handler.filter';
-import { ValidacaoPipe } from '../validators/validation.pipe';
+import { HttpExceptionHandlerFilter } from '../../filters/http-exception-handler.filter';
+import { ValidacaoPipe } from '../../validators/validation.pipe';
 import { AvaliacoesExperienciasService } from './avaliacoes-experiencias.service';
 import { CreateAvaliacoesExperienciaDto } from './dto/create-avaliacoes-experiencia.dto';
 
