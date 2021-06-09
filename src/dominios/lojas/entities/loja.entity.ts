@@ -23,8 +23,8 @@ export class Loja extends BaseEntity {
     transacoesExperiencias: TransacoesExperiencia[];
 
     @BeforeUpdate()
-    async validateUpdate() {console.log('#$%¨&*¨%$¨&*')
-        this.updateDate = new Date();        
+    async validateUpdate() {        
+        // this.updateDate = new Date();        
     }
 
 }

@@ -10,7 +10,7 @@ export class CreateAvaliacoesExperienciaDto {
     @IsDefined({message: "Obrigatório."})
     @IsNumber({}, { message: "Inválida." })
     @Min(0, { message: "Mínimo 0" })
-    @Max(0, { message: "Máximo 10" })
+    @Max(10, { message: "Máximo 10" })
     nota: number;
     
     @IsDefined({message: "Obrigatório."})

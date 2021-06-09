@@ -11,22 +11,20 @@ export class LojasService {
   constructor(
     @InjectRepository(Loja)
     private lojasRepository: Repository<Loja>
-  ) {
+  ) {}
 
-  }
-
-  async create(loja: CreateLojaDto) {
-    return this.lojasRepository.save(loja);
+  async create(createLojaDto: CreateLojaDto) {
+    return this.lojasRepository.save(createLojaDto, { reload: true });
   }
 
   async findAll() {
     return this.lojasRepository.find();
   }
 
-  async update(id: number, loja: UpdateLojaDto) {
+  async update(id: number, updateLojaDto: UpdateLojaDto) {
     let entidade = await this.lojasRepository.findOne(id);
     if (!entidade) throw new NotFoundException('Loja não encontrada.');
-    if (loja.nome) entidade.nome = loja.nome;
+    if (updateLojaDto.nome) entidade.nome = updateLojaDto.nome;
     return await entidade.save({ reload: true });
   }
 

@@ -27,8 +27,4 @@ export class CreateClienteDto {
     @IsCPF()
     cpf: string;
 
-    @IsOptional()
-    @IsBoolean({ message: "Inválido." })
-    ativo: boolean;    
-
 }

@@ -8,10 +8,13 @@ import { Colaborador } from './entities/colaboradore.entity';
 @Injectable()
 export class ColaboradoresService {
 
-  constructor(@InjectRepository(Colaborador) private colaboradorRepository: Repository<Colaborador>) { }
+  constructor(
+    @InjectRepository(Colaborador)
+    private colaboradorRepository: Repository<Colaborador>
+  ) { }
 
   async create(createColaboradoreDto: CreateColaboradoreDto) {
-    return this.colaboradorRepository.save(createColaboradoreDto);
+    return this.colaboradorRepository.save(createColaboradoreDto, { reload: true });
   }
 
   async findAll() {
@@ -21,8 +24,8 @@ export class ColaboradoresService {
   async update(id: number, updateColaboradoreDto: UpdateColaboradoreDto) {
     let colaborador = await this.colaboradorRepository.findOne(id);
     if (!colaborador) throw new NotFoundException('Colaborador não encontrado.');
-    if(colaborador.nome) colaborador.nome = colaborador.nome;
-    return await colaborador.save({ reload: true }).then(entidade=>entidade);
+    if (colaborador.nome) colaborador.nome = updateColaboradoreDto.nome;
+    return await colaborador.save({ reload: true });
   }
 
   async remove(id: number) {

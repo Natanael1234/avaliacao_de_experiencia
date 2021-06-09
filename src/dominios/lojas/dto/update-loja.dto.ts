@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { IsBoolean, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsUndefined } from '../../../validators/undefined.validator';
 import { CreateLojaDto } from './create-loja.dto';
 
 export class UpdateLojaDto extends PartialType(CreateLojaDto) {
@@ -9,5 +10,4 @@ export class UpdateLojaDto extends PartialType(CreateLojaDto) {
     @MinLength(6, { message: "Mínimo 6 caracteres." })
     @MaxLength(60, { message: "Máximo 60 caracteres." })
     nome: string;
-
 }
