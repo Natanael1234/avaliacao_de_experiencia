@@ -112,7 +112,6 @@ describe('AppController (e2e)', () => {
       ctx.clientes[3].telefone = '24989885300';
       ctx.clientes[3].email = 'cliente3modificado@email.com';
       let res = await ctx.request.put(`/clientes/${ctx.clientes[3].id}`).send({ ...ctx.clientes[3], id: undefined });
-      console.error(ctx.clientes[3].updateDate == res.body.updateDate, ctx.clientes[3].updateDate, res.body.updateDate)
       expect(res.status).toBe(200);
       expect(res.body.id).toBe(ctx.clientes[3].id);
       expect(res.body.nome).toBe(ctx.clientes[3].nome);
@@ -244,7 +243,7 @@ describe('AppController (e2e)', () => {
         expect(res.status).toBe(201);
         expect(typeof res.body.id).toBe('number');
         expect(res.body.nota).toBe(ctx.dadosAvaliacoesExperiencias[i].nota);
-        expect(res.body.comentario).toBe(ctx.dadosAvaliacoesExperiencias[i].comentario);        
+        expect(res.body.comentario).toBe(ctx.dadosAvaliacoesExperiencias[i].comentario);
         expect(res.body.transacaoExperienciaId).toBe(ctx.dadosAvaliacoesExperiencias[i].transacaoExperienciaId);
         expect(date.toISOString() < res.body.creationDate).toBeTruthy();
         ctx.avaliacoesExperiencias.push(res.body);
