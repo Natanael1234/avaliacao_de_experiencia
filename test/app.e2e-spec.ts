@@ -1,5 +1,3 @@
-import { MoreThan } from 'typeorm';
-import { Colaborador } from '../src/dominios/colaboradores/entities/colaboradore.entity';
 import { E2ETestContext } from './e2e-test-context';
 
 
@@ -52,7 +50,9 @@ describe('AppController (e2e)', () => {
       expect(res.status).toBe(200);
       expect(typeof res.body.id).toBe('number');
       expect(res.body.nome).toBe(ctx.lojas[2].nome);
-      expect(res.body.deletedAt).toBe(null);
+      // expect(new Date(res.body.updateDate).getTime()).toBeGreaterThan(new Date(ctx.lojas[2].updateDate).getTime());
+      expect(res.body.creationDate).toBe(ctx.lojas[2].creationDate);
+      expect(ctx.isIsoDate(res.body.deletedAt)).toBeFalsy();
       ctx.lojas[3] = res.body;
     });
 
@@ -90,9 +90,7 @@ describe('AppController (e2e)', () => {
     });
 
     it('Get /clientes', async () => {
-
-      let res = await ctx.request
-        .get('/clientes')
+      let res = await ctx.request.get('/clientes')
       expect(res.status).toBe(200);
       expect(res.body.constructor.name).toBe('Array');
       expect(res.body.length).toBe(ctx.dadosClientes.length);
@@ -102,26 +100,27 @@ describe('AppController (e2e)', () => {
         expect(res.body[i].email).toBe(ctx.clientes[i].email);
         expect(res.body[i].telefone).toBe(ctx.clientes[i].telefone);
         expect(res.body[i].cpf).toBe(ctx.clientes[i].cpf);
-        expect(res.body[i].deleted).toBeUndefined();
-        // expect(res.body[i].updatedAt).toBe();
+        expect(res.body[i].updateDate).toBe(ctx.clientes[i].updateDate);
+        expect(res.body[i].creationDate).toBe(ctx.clientes[i].creationDate);
+        expect(res.body[i].deletedAt).toBeNull();
       }
     });
 
     it('Put /clientes/:clienteId', async () => {
-
       ctx.clientes[3].nome = 'Cliente 3 modificado';
       ctx.clientes[3].cpf = ctx.gerarCPF();
       ctx.clientes[3].telefone = '24989885300';
       ctx.clientes[3].email = 'cliente3modificado@email.com';
-
       let res = await ctx.request.put(`/clientes/${ctx.clientes[3].id}`).send({ ...ctx.clientes[3], id: undefined });
-      expect(typeof res.body.id).toBe('number');
+      console.error(ctx.clientes[3].updateDate == res.body.updateDate, ctx.clientes[3].updateDate, res.body.updateDate)
+      expect(res.status).toBe(200);
+      expect(res.body.id).toBe(ctx.clientes[3].id);
       expect(res.body.nome).toBe(ctx.clientes[3].nome);
       expect(res.body.email).toBe(ctx.clientes[3].email);
       expect(res.body.telefone).toBe(ctx.clientes[3].telefone);
-      // expect(res.body.updateDate).toBe(null);
-      // expect(res.body.deletedAt).toBe(null);
-
+      // expect(new Date(res.body.updateDate).getTime()).toBeGreaterThan(new Date(ctx.clientes[3].updateDate).getTime());
+      expect(res.body.creationDate).toBe(ctx.clientes[3].creationDate);
+      expect(res.body.deletedAt).toBeNull();
       ctx.clientes[3] = res.body;
     });
 
@@ -131,7 +130,7 @@ describe('AppController (e2e)', () => {
       expect(res.status).toBe(200);
       expect(res.body.id).toBe(ctx.clientes[3].id);
       // expect(res.body.updateDate).toBe();
-      expect(res.body.deletedAt).toBe(null);
+      // expect(ctx.isIsoDate(res.body.deletedAt)).toBeTruthy();
     });
   });
 
@@ -173,7 +172,10 @@ describe('AppController (e2e)', () => {
       expect(res.status).toBe(200);
       expect(res.body.id).toBeDefined();
       expect(res.body.nome).toBe(ctx.colaboradores[2].nome);
-      // expect(res.body.deletedAt).toBe(null);
+      // expect(new Date(res.body.updateDate).getTime()).toBeGreaterThan(new Date(ctx.colaboradores[2].updateDate).getTime());
+      expect(res.body.creationDate).toBe(ctx.colaboradores[2].creationDate);
+      expect(res.body.deletedAt).toBeNull();
+
       ctx.colaboradores[3] = res.body;
     });
 
@@ -220,6 +222,9 @@ describe('AppController (e2e)', () => {
       expect(res.body.clienteId).toBe(ctx.transacoesExperiencias[3].clienteId);
       expect(res.body.lojaId).toBe(ctx.transacoesExperiencias[3].lojaId);
       expect(res.body.colaboradorId).toBe(ctx.transacoesExperiencias[3].colaboradorId);
+      expect(new Date(res.body.updateDate).getTime()).toBeGreaterThan(new Date(ctx.transacoesExperiencias[3].updateDate).getTime());
+      expect(res.body.creationDate).toBe(ctx.transacoesExperiencias[3].creationDate);
+      // expect(ctx.isIsoDate(res.body.deletedAt)).toBeTruthy();
       ctx.transacoesExperiencias[3] = res.body;
     });
 
@@ -237,10 +242,9 @@ describe('AppController (e2e)', () => {
         let date = new Date();
         let res = await ctx.request.post('/avaliacoes-experiencias').send(ctx.dadosAvaliacoesExperiencias[i]);
         expect(res.status).toBe(201);
-        expect(res.body.id).toBeDefined();
+        expect(typeof res.body.id).toBe('number');
         expect(res.body.nota).toBe(ctx.dadosAvaliacoesExperiencias[i].nota);
-        expect(res.body.comentario).toBe(ctx.dadosAvaliacoesExperiencias[i].comentario);
-        expect(res.body.transacaoExperienciaId).toBeTruthy();
+        expect(res.body.comentario).toBe(ctx.dadosAvaliacoesExperiencias[i].comentario);        
         expect(res.body.transacaoExperienciaId).toBe(ctx.dadosAvaliacoesExperiencias[i].transacaoExperienciaId);
         expect(date.toISOString() < res.body.creationDate).toBeTruthy();
         ctx.avaliacoesExperiencias.push(res.body);
@@ -259,8 +263,6 @@ describe('AppController (e2e)', () => {
       }
     });
   });
-
-
 
 });
 

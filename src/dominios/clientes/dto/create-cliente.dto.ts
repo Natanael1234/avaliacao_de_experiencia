@@ -1,5 +1,5 @@
 
-import { IsBoolean, IsDefined, IsEmail, IsOptional, IsPhoneNumber, IsString, MaxLength, MinLength } from "class-validator";
+import { IsDefined, IsEmail, IsPhoneNumber, IsString, MaxLength, MinLength } from "class-validator";
 import { IsCPF } from "../../../validators/cpf.validator";
 import { IsUndefined } from "../../../validators/undefined.validator";
 

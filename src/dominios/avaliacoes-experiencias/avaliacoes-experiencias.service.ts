@@ -1,23 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { CreateAvaliacoesExperienciaDto } from './dto/create-avaliacoes-experiencia.dto';
 import { AvaliacoesExperiencia } from './entities/avaliacoes-experiencia.entity';
 
 @Injectable()
 export class AvaliacoesExperienciasService {
 
-  constructor(
-    @InjectRepository(AvaliacoesExperiencia)
-    private avaliacoesExperienciasRepository: Repository<AvaliacoesExperiencia>
-  ) { }
+  constructor() { }
 
-  async create(createAvaliacoesExperienciaDto: CreateAvaliacoesExperienciaDto): Promise<any> {
-    return this.avaliacoesExperienciasRepository.save(createAvaliacoesExperienciaDto);
+  create(createAvaliacoesExperienciaDto: CreateAvaliacoesExperienciaDto): Promise<any> {
+    const avaliacaoExperiencia = new AvaliacoesExperiencia();
+    avaliacaoExperiencia.nota = createAvaliacoesExperienciaDto.nota;
+    avaliacaoExperiencia.comentario = createAvaliacoesExperienciaDto.comentario;
+    avaliacaoExperiencia.transacaoExperienciaId = createAvaliacoesExperienciaDto.transacaoExperienciaId;
+    return avaliacaoExperiencia.save({ reload: true }).then(entity => entity);
   }
 
-  async findAll(): Promise<any[]> {
-    return this.avaliacoesExperienciasRepository.find();
+  findAll(): Promise<any[]> {
+    return AvaliacoesExperiencia.find();
   }
 
 }

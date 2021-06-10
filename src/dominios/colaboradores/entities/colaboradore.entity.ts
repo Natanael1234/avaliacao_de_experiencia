@@ -24,7 +24,7 @@ export class Colaborador extends BaseEntity {
 
     @BeforeUpdate()
     async validateUpdate() {
-        this.updateDate = new Date();
+        // this.updateDate = new Date();
     }
 
 }

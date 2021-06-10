@@ -35,7 +35,7 @@ export class Cliente extends BaseEntity {
 
     @BeforeUpdate()
     async validateUpdate() {
-        this.updateDate = new Date();        
+        // this.updateDate = new Date();        
     }
 
 }
