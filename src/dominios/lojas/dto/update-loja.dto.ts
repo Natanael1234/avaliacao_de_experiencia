@@ -1,6 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsBoolean, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { IsUndefined } from '../../../validators/undefined.validator';
+import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { CreateLojaDto } from './create-loja.dto';
 
 export class UpdateLojaDto extends PartialType(CreateLojaDto) {

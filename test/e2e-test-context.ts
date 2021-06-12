@@ -4,7 +4,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule, runningDockerCompose } from "../src/app.module";
 import { Connection, createConnection, getConnection } from 'typeorm';
 import { Loja } from '../src/dominios/lojas/entities/loja.entity';
-import { Colaborador } from '../src/dominios/colaboradores/entities/colaboradore.entity';
+import { Colaborador } from '../src/dominios/colaboradores/entities/colaborador.entity';
 import { Cliente } from '../src/dominios/clientes/entities/cliente.entity';
 import { TransacoesExperiencia } from '../src/dominios/transacoes-experiencias/entities/transacoes-experiencia.entity';
 import { AvaliacoesExperiencia } from '../src/dominios/avaliacoes-experiencias/entities/avaliacoes-experiencia.entity';

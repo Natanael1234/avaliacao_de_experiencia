@@ -27,7 +27,7 @@ export class ClientesController {
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number, @Query('ativo', ParseBoolPipe) ativo: boolean) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.clientesService.remove(id);
   }
 }

@@ -1,6 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { CreateTransacoesExperienciaDto } from './dto/create-transacoes-experiencia.dto';
 import { UpdateTransacoesExperienciaDto } from './dto/update-transacoes-experiencia.dto';
 import { TransacoesExperiencia } from './entities/transacoes-experiencia.entity';
@@ -17,7 +15,7 @@ export class TransacoesExperienciasService {
     transacaoExperiencia.colaboradorId = createTransacoesExperienciaDto.colaboradorId;
     transacaoExperiencia.lojaId = createTransacoesExperienciaDto.lojaId;
     transacaoExperiencia.data = createTransacoesExperienciaDto.data;
-    return TransacoesExperiencia.save(transacaoExperiencia, { reload: true }).then(entidade => entidade);
+    return transacaoExperiencia.save({ reload: true });
   }
 
   async update(id: number, updateTransacoesExperienciaDto: UpdateTransacoesExperienciaDto) {
@@ -28,7 +26,7 @@ export class TransacoesExperienciasService {
     entidade.clienteId = updateTransacoesExperienciaDto.clienteId;
     entidade.lojaId = updateTransacoesExperienciaDto.lojaId;
     entidade.colaboradorId = updateTransacoesExperienciaDto.colaboradorId;
-    return entidade.save({ reload: true }).then(entidade => entidade);
+    return entidade.save({ reload: true });
   }
 
 }

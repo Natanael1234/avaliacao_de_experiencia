@@ -1,6 +1,7 @@
 
 
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, OneToOne, JoinColumn, BeforeUpdate } from "typeorm";
+import { curDateWithoutTimezone } from "../../../utils/date.utils";
 import { TransacoesExperiencia } from "../../transacoes-experiencias/entities/transacoes-experiencia.entity";
 
 @Entity()
@@ -29,8 +30,8 @@ export class AvaliacoesExperiencia extends BaseEntity {
     transacaoExperienciaId: number;
 
     @BeforeUpdate()
-    async validateUpdate() {
-        // this.updateDate = new Date();        
+    async beforeUpdate() {
+        this.updateDate = curDateWithoutTimezone();
     }
 
 }

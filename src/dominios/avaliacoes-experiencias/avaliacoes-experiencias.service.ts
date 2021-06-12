@@ -12,7 +12,7 @@ export class AvaliacoesExperienciasService {
     avaliacaoExperiencia.nota = createAvaliacoesExperienciaDto.nota;
     avaliacaoExperiencia.comentario = createAvaliacoesExperienciaDto.comentario;
     avaliacaoExperiencia.transacaoExperienciaId = createAvaliacoesExperienciaDto.transacaoExperienciaId;
-    return avaliacaoExperiencia.save({ reload: true }).then(entity => entity);
+    return avaliacaoExperiencia.save({ reload: true });
   }
 
   findAll(): Promise<any[]> {

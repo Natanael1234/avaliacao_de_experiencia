@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Put, UseFilters } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put, UseFilters } from '@nestjs/common';
 import { HttpExceptionHandlerFilter } from '../../filters/http-exception-handler.filter';
 import { ValidacaoPipe } from '../../validators/validation.pipe';
 import { ColaboradoresService } from './colaboradores.service';
-import { CreateColaboradoreDto } from './dto/create-colaboradore.dto';
-import { UpdateColaboradoreDto } from './dto/update-colaboradore.dto';
+import { CreateColaboradorDto } from './dto/create-colaborador.dto';
+import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
 
 @UseFilters(HttpExceptionHandlerFilter)
 @Controller('colaboradores')
@@ -11,7 +11,7 @@ export class ColaboradoresController {
   constructor(private readonly colaboradoresService: ColaboradoresService) { }
 
   @Post()
-  async create(@Body(new ValidacaoPipe()) createColaboradoreDto: CreateColaboradoreDto) {
+  async create(@Body(new ValidacaoPipe()) createColaboradoreDto: CreateColaboradorDto) {
     return this.colaboradoresService.create(createColaboradoreDto);
   }
 
@@ -21,7 +21,7 @@ export class ColaboradoresController {
   }
 
   @Put(':id')
-  async update(@Param('id', ParseIntPipe) id: number, @Body(new ValidacaoPipe()) updateColaboradoreDto: UpdateColaboradoreDto) {
+  async update(@Param('id', ParseIntPipe) id: number, @Body(new ValidacaoPipe()) updateColaboradoreDto: UpdateColaboradorDto) {
     return this.colaboradoresService.update(id, updateColaboradoreDto);
   }
 

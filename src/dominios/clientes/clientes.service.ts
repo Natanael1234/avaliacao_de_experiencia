@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { curDateWithoutTimezone } from '../../utils/date.utils';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { Cliente } from './entities/cliente.entity';
@@ -14,7 +15,7 @@ export class ClientesService {
     cliente.cpf = createClienteDto.cpf;
     cliente.email = createClienteDto.email;
     cliente.telefone = createClienteDto.telefone;
-    return cliente.save({ reload: true }).then(entidade => entidade);
+    return cliente.save({ reload: true });
   }
 
   findAll() {
@@ -28,12 +29,13 @@ export class ClientesService {
     if (cliente.email) cliente.email = updateClienteDto.email;
     if (cliente.telefone) cliente.telefone = updateClienteDto.telefone;
     if (cliente.cpf) cliente.cpf = updateClienteDto.cpf;
-    return cliente.save({ reload: true }).then(entidade => entidade);
+    return cliente.save({ reload: true });
   }
 
   async remove(id: number) {
     let cliente = await Cliente.findOne(id);
     if (!cliente) throw new NotFoundException('Cliente não encontrado.');
-    return cliente.softRemove({ reload: true }).then(entidade => entidade);
+    cliente.deletedAt = curDateWithoutTimezone();
+    return cliente.save({ reload: true });
   }
 }

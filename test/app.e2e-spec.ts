@@ -50,7 +50,7 @@ describe('AppController (e2e)', () => {
       expect(res.status).toBe(200);
       expect(typeof res.body.id).toBe('number');
       expect(res.body.nome).toBe(ctx.lojas[2].nome);
-      // expect(new Date(res.body.updateDate).getTime()).toBeGreaterThan(new Date(ctx.lojas[2].updateDate).getTime());
+      expect(new Date(res.body.updateDate).getTime()).toBeGreaterThan(new Date(ctx.lojas[2].updateDate).getTime());
       expect(res.body.creationDate).toBe(ctx.lojas[2].creationDate);
       expect(ctx.isIsoDate(res.body.deletedAt)).toBeFalsy();
       ctx.lojas[3] = res.body;
@@ -61,7 +61,7 @@ describe('AppController (e2e)', () => {
       let res = await ctx.request.delete('/lojas/' + ctx.lojas[2].id).query({ ativa: false });
       expect(res.status).toBe(200);
       expect(res.body.id).toBe(ctx.lojas[2].id);
-      // expect(ctx.isIsoDate(res.body.deletedAt)).toBeTruthy();
+      expect(ctx.isIsoDate(res.body.deletedAt)).toBeTruthy();
     });
 
   });
@@ -163,26 +163,24 @@ describe('AppController (e2e)', () => {
       }
     });
 
-    it('Put /colaboradores/:colaboradorId', async () => {
-      let date = new Date();
+    it('Put /colaboradores/:colaboradorId', async () => {      
       ctx.colaboradores[2].nome = 'Colaborador 3 modificado';
-
       let res = await ctx.request.put(`/colaboradores/${ctx.colaboradores[2].id}`).send({ ...ctx.colaboradores[2], id: undefined });
       expect(res.status).toBe(200);
       expect(res.body.id).toBeDefined();
       expect(res.body.nome).toBe(ctx.colaboradores[2].nome);
-      // expect(new Date(res.body.updateDate).getTime()).toBeGreaterThan(new Date(ctx.colaboradores[2].updateDate).getTime());
+      expect(new Date(res.body.updateDate).getTime()).toBeGreaterThan(new Date(ctx.colaboradores[2].updateDate).getTime());
       expect(res.body.creationDate).toBe(ctx.colaboradores[2].creationDate);
       expect(res.body.deletedAt).toBeNull();
 
-      ctx.colaboradores[3] = res.body;
+      ctx.colaboradores[2] = res.body;
     });
 
     it('Delete /colaboradores/:colaboradorId', async () => {
       let res = await ctx.request.delete('/colaboradores/' + ctx.colaboradores[2].id).query({ ativo: false });
       expect(res.status).toBe(200);
       expect(res.body.id).toBe(ctx.lojas[2].id);
-      // expect(ctx.isIsoDate(res.body.deletedAt)).toBeTruthy();
+      expect(ctx.isIsoDate(res.body.deletedAt)).toBeTruthy();
     });
   });
 

@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, OneToMany, BeforeUpdate, DeleteDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, OneToMany, BeforeUpdate, DeleteDateColumn, BeforeRemove } from "typeorm";
+import { curDateWithoutTimezone } from "../../../utils/date.utils";
 import { TransacoesExperiencia } from "../../transacoes-experiencias/entities/transacoes-experiencia.entity";
 
 @Entity()
@@ -15,7 +16,7 @@ export class Loja extends BaseEntity {
 
     @UpdateDateColumn({ type: "timestamp" })
     updateDate: Date;
-    
+
     @DeleteDateColumn()
     deletedAt?: Date;
 
@@ -23,8 +24,8 @@ export class Loja extends BaseEntity {
     transacoesExperiencias: TransacoesExperiencia[];
 
     @BeforeUpdate()
-    async validateUpdate() {        
-        // this.updateDate = new Date();        
+    async beforeUpdate(a) {
+        this.updateDate = curDateWithoutTimezone();
     }
 
 }

@@ -1,7 +1,7 @@
-import { IsBoolean, IsDefined, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsDefined, IsString, MaxLength, MinLength } from "class-validator";
 import { IsUndefined } from "../../../validators/undefined.validator";
 
-export class CreateColaboradoreDto {
+export class CreateColaboradorDto {
 
     @IsUndefined()
     id: number;
